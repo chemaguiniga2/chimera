@@ -1,0 +1,20 @@
+Chimera compiler, version 0.1
+===============================   
+
+Included in this release:
+
+   * Lexical analysis
+    
+To build, at the terminal type:
+
+    make
+   
+To run, type:
+
+    ./chimera.exe <file_name>
+    
+Where <file_name> is the name of a Buttercup source file. You can try with
+these files:
+
+   * prog1.chim
+   * prog2.chim
