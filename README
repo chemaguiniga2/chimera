@@ -11,10 +11,14 @@ To build, at the terminal type:
    
 To run, type:
 
-    ./chimera.exe <file_name>
+    ./chimera.exe examples/<file_name>
     
-Where <file_name> is the name of a Buttercup source file. You can try with
+Where <file_name> is the name of a Chimera source file. You can try with
 these files:
 
-   * prog1.chim
-   * prog2.chim
+   * hello.chimera
+   * palindrome.chimera
+   * variables.chimera
+   * binary.chimera
+   * factorial.chimera
+   * lists.chimera
