@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 
-//namespace Chimera {
+namespace Chimera {
 
 	class Scanner {
 
@@ -74,8 +74,7 @@ using System.Text.RegularExpressions;
 			{"div", TokenCategory.DIV},
 			{"rem", TokenCategory.REM},
 			{"not", TokenCategory.NOT},
-
-			/*{"WrInt", TokenCategory.WRINT},
+			{"WrInt", TokenCategory.WRINT},
 			{"WrStr", TokenCategory.WRSTR},
 			{"WrBool", TokenCategory.WRBOOL},
 			{"WrLn", TokenCategory.WRLN},
@@ -92,7 +91,7 @@ using System.Text.RegularExpressions;
 			{"NewLstStr", TokenCategory.NEWLSTSTR},
 			{"NewLstBool", TokenCategory.NEWLSTBOOL},
 			{"IntToStr", TokenCategory.INTTOSTR},
-			{"StrToInt", TokenCategory.STRTOINT},*/
+			{"StrToInt", TokenCategory.STRTOINT},
 
 		};
 
@@ -189,4 +188,4 @@ using System.Text.RegularExpressions;
 		}
 	}
 
-//}
+}
