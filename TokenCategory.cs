@@ -6,19 +6,19 @@ enum TokenCategory {
 	INTEGER,
 	STRING,
 	BOOLEAN,
-	LIST,
+	LIST, 
 	OF,
-	PROCEDURE,
-	BEGIN,
-	IF,
+	PROCEDURE, //FOS
+	BEGIN,  //FOS
+	IF, //FOS
 	THEN,
 	ELSEIF,
 	ELSE,
-	LOOP,
-	FOR,
+	LOOP, //FOS
+	FOR, //FOS
 	IN,
-	DO,
-	RETURN,
+	DO, //FOS
+	RETURN, //FOS
 	EXIT,
 	AND,
 	OR,
@@ -26,7 +26,7 @@ enum TokenCategory {
 	DIV,
 	REM,
 	NOT,
-	IDENTIFIER,
+	IDENTIFIER, //FOS
 	INTEGERLITERAL,
 	STRINGLITERAL,
 	ENDLINE,
