@@ -1,6 +1,6 @@
 enum TokenCategory {
-	CONST,
-	VAR,
+	CONST,  // Declaration
+	VAR,  // Declaration
 	PROGRAM,
 	END,
 	INTEGER,
