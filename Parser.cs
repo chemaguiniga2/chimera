@@ -9,7 +9,6 @@ namespace Chimera {
             new HashSet<TokenCategory>() {
                 TokenCategory.CONST,
                 TokenCategory.VAR,
-
             };
 
         static readonly ISet<TokenCategory> firstOfStatement =
