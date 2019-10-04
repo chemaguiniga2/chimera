@@ -3,8 +3,8 @@ using System.Collections.Generic;
 
 namespace Chimera {
 
-    class Parser {      
-
+    class Parser {
+        
         static readonly ISet<TokenCategory> firstOfDeclaration =
             new HashSet<TokenCategory>() {
                 TokenCategory.CONST,
@@ -15,8 +15,15 @@ namespace Chimera {
         static readonly ISet<TokenCategory> firstOfStatement =
             new HashSet<TokenCategory>() {
                 TokenCategory.IDENTIFIER,
-                TokenCategory.PRINT,
-                TokenCategory.IF
+                TokenCategory.PROCEDURE,
+                //TokenCategory.PRINT,
+                TokenCategory.IF,
+                TokenCategory.FOR,
+                //TokenCategory.WHILE,
+                TokenCategory.LOOP,
+                TokenCategory.BEGIN,
+                TokenCategory.RETURN, 
+                TokenCategory.DO
             };
 
         static readonly ISet<TokenCategory> firstOfOperator =
