@@ -1,4 +1,23 @@
-//Hola soy Dach 
+using System;
+using System.Collections.Generic;
+
+namespace Chimera {
+
+    class Parser {      
+
+        static readonly ISet<TokenCategory> firstOfDeclaration =
+            new HashSet<TokenCategory>() {
+                TokenCategory.CONST,
+                TokenCategory.VAR,
+
+            };
+
+        static readonly ISet<TokenCategory> firstOfStatement =
+            new HashSet<TokenCategory>() {
+                TokenCategory.IDENTIFIER,
+                TokenCategory.PRINT,
+                TokenCategory.IF
+            };
 
         static readonly ISet<TokenCategory> firstOfOperator =
             new HashSet<TokenCategory>() {
@@ -13,3 +32,5 @@
                 TokenCategory.LESSTHAN,
                 TokenCategory.BIGGERTHAN,
             };
+    }
+}
