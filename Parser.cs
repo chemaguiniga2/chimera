@@ -37,6 +37,8 @@ namespace Chimera {
                 TokenCategory.INEQUAL,
                 TokenCategory.LESSTHAN,
                 TokenCategory.BIGGERTHAN,
+                TokenCategory.LESSOREQUAL,
+                TokenCategory.BIGGEROREQUAL,
             };
     }
 }
