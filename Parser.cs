@@ -58,10 +58,25 @@ namespace Chimera {
             get { return tokenStream.Current.Category; }
         }
 
+        public Token Expect(TokenCategory category) {
+            if (CurrentToken == category) {
+                Token current = tokenStream.Current;
+                tokenStream.MoveNext();
+                return current;
+            } else {
+                throw new SyntaxError(category, tokenStream.Current);                
+            }
+        }
+
         public void Program() {
             while(firstOfDeclaration.Contains(CurrentToken)) {
                 Declaration();
             }
+            while(firstOfStatement.Contains(CurrentToken)) {
+                Statement();
+            }
+
+            Expect(TokenCategory.EOF);
         }
 
         public void Declaration() {
@@ -71,41 +86,67 @@ namespace Chimera {
 
         public void Statement() {
 
-            // switch (CurrentToken) {
+            switch (CurrentToken) {
 
-            // case TokenCategory.IDENTIFIER:
-            //     Assignment();
-            //     break;
+            case TokenCategory.IDENTIFIER:
+                Assignment();
+                break;
 
-            // case TokenCategory.PRINT:
-            //     Print();
-            //     break;
+            case TokenCategory.PROCEDURE:
+                // Procedure function
+                // Print();
+                // break;
 
-            // case TokenCategory.IF:
-            //     If();
-            //     break;
+            case TokenCategory.IF:
+                If();
+                break;
+            
+            case TokenCategory.FOR:
+                // for function
+                // If();
+                // break;
 
-            // default:
-            //     throw new SyntaxError(firstOfStatement, 
-            //                           tokenStream.Current);
-            // }
+            case TokenCategory.LOOP:
+                // loop function
+                // If();
+                // break;
+
+            case TokenCategory.BEGIN:
+                // BEGIN function
+                // If();
+                // break;
+
+            case TokenCategory.RETURN:
+                // return function
+                // If();
+                // break;
+            
+            case TokenCategory.DO:
+                // do function
+                // If();
+                // break;
+
+            default:
+                throw new SyntaxError(firstOfStatement, 
+                                      tokenStream.Current);
+            }
         }
 
         public void Type() {
-            // switch (CurrentToken) {
+            switch (CurrentToken) {
 
-            // case TokenCategory.INT:
-            //     Expect(TokenCategory.INT);
-            //     break;
+            case TokenCategory.CONST:
+                Expect(TokenCategory.CONST);
+                break;
 
-            // case TokenCategory.BOOL:
-            //     Expect(TokenCategory.BOOL);
-            //     break;
+            case TokenCategory.VAR:
+                Expect(TokenCategory.VAR);
+                break;
 
-            // default:
-            //     throw new SyntaxError(firstOfDeclaration, 
-            //                           tokenStream.Current);
-            // }
+            default:
+                throw new SyntaxError(firstOfDeclaration, 
+                                      tokenStream.Current);
+            }
         }
 
         public void Assignment() {
