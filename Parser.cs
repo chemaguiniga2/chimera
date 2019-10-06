@@ -10,6 +10,7 @@ namespace Chimera {
                 TokenCategory.CONST,
                 TokenCategory.VAR,
                 TokenCategory.PROCEDURE, //--> creo que hay que agregar esto
+                TokenCategory.PROGRAM,
             };
 
         static readonly ISet<TokenCategory> firstOfStatement =
@@ -78,13 +79,30 @@ namespace Chimera {
             }
         }
 
+        //dache
         public void Program() {
-            while(firstOfDeclaration.Contains(CurrentToken)) {
-                Declaration();
+            if (CurrentToken == TokenCategory.CONST) {
+                do{
+                    ConstantDeclaration();
+                }while(CurrentToken == TokenCategory.IDENTIFIER);
             }
-            while(firstOfStatement.Contains(CurrentToken)) {
+
+            if (CurrentToken == TokenCategory.VAR) {
+                do{
+                    ConstantDeclaration();
+                }while(CurrentToken == TokenCategory.IDENTIFIER);
+            }
+                   
+            while(CurrentToken == TokenCategory.PROCEDURE){
+                ProcedureDeclaration();
+            }
+
+            Expect(TokenCategory.PROGRAM);
+            while(firstOfStatement.Contains(CurrentToken)){
                 Statement();
             }
+            Expect(TokenCategory.END);
+            Expect(TokenCategory.ENDLINE);                         
 
             Expect(TokenCategory.EOF);
         }
