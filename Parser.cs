@@ -89,7 +89,7 @@ namespace Chimera {
 
             if (CurrentToken == TokenCategory.VAR) {
                 do{
-                    ConstantDeclaration();
+                    VariableDeclaration();
                 }while(CurrentToken == TokenCategory.IDENTIFIER);
             }
                    
