@@ -17,6 +17,7 @@ namespace Chimera {
               | (?<Identifier>              [a-zA-Z][_a-zA-Z\d]*		)
 			  | (?<IntegerLiteral>           \d+                 		)
               | (?<StringLiteral>           [""]([^""]|[""][""])*[""] 	)
+			  | (?<BooleanLiteral>          (true|false) 				)
               | (?<EndLine>                 [;]                 )
               | (?<ConstantDeclaration>     [:][=]              )
               | (?<Comma>                   [,]                 )
@@ -81,6 +82,7 @@ namespace Chimera {
 			new Dictionary<string, TokenCategory>() {
 			{"IntegerLiteral", TokenCategory.INTEGERLITERAL},
 			{"StringLiteral", TokenCategory.STRINGLITERAL},
+			{"BooleanLiteral", TokenCategory.STRINGLITERAL},
 			{"EndLine", TokenCategory.ENDLINE},
 			{"ConstantDeclaration", TokenCategory.CONSTANTDECLARATION},
 			{"Comma", TokenCategory.COMMA},
