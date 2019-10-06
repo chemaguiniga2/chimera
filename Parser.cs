@@ -86,6 +86,8 @@ namespace Chimera {
 
         public void Statement() {
 
+            //considerar aqui el else if
+
             switch (CurrentToken) {
 
             case TokenCategory.IDENTIFIER:
@@ -94,8 +96,8 @@ namespace Chimera {
 
             case TokenCategory.PROCEDURE:
                 // Procedure function
-                // Print();
-                // break;
+                Procedure();
+                break;
 
             case TokenCategory.IF:
                 If();
@@ -150,9 +152,11 @@ namespace Chimera {
         }
 
         public void Assignment() {
-            // Expect(TokenCategory.IDENTIFIER);
-            // Expect(TokenCategory.ASSIGN);
-            // Expression();
+            Expect(TokenCategory.IDENTIFIER);
+            //Expression(); revisar como verificar 
+            Expect(TokenCategory.CONSTANTDECLARATION);
+            Expression(); //Seguir revisando expression()
+            Expect(TokenCategory.ENDLINE);
         }
 
         public void Print() {
@@ -161,9 +165,9 @@ namespace Chimera {
         }
 
         public void If() {
-            // Expect(TokenCategory.IF);
+            Expect(TokenCategory.IF);
             // Expression();
-            // Expect(TokenCategory.THEN);
+            Expect(TokenCategory.THEN);
             // while (firstOfStatement.Contains(CurrentToken)) {
             //     Statement();
             // }
@@ -171,48 +175,54 @@ namespace Chimera {
         }
 
         public void Expression() {
-            // SimpleExpression();
-            // while (firstOfOperator.Contains(CurrentToken)) {
-            //     Operator();
-            //     SimpleExpression();
-            // }
+            SimpleExpression();
+            //ver si descomentar lo siguiente
+            while (firstOfOperator.Contains(CurrentToken)) {
+                // Operator();
+                SimpleExpression();
+            }
         }
 
         public void SimpleExpression() {
 
-            // switch (CurrentToken) {
+            switch (CurrentToken) {
 
-            // case TokenCategory.IDENTIFIER:
-            //     Expect(TokenCategory.IDENTIFIER);
-            //     break;
+            case TokenCategory.IDENTIFIER:
+                Expect(TokenCategory.IDENTIFIER);
+                break;
 
-            // case TokenCategory.INT_LITERAL:
-            //     Expect(TokenCategory.INT_LITERAL);
-            //     break;
+            case TokenCategory.INITBRACKET:
+                Expect(TokenCategory.INITBRACKET);
+                Expression();
+                Expect(TokenCategory.CLOSINGBRACKET);
+                break;
 
-            // case TokenCategory.TRUE:
-            //     Expect(TokenCategory.TRUE);
-            //     break;
+            case TokenCategory.INTEGERLITERAL:
+                Expect(TokenCategory.INTEGERLITERAL);
+                break;
 
-            // case TokenCategory.FALSE:
-            //     Expect(TokenCategory.FALSE);
-            //     break;
+            case TokenCategory.TRUE:
+                Expect(TokenCategory.TRUE);
+                break;
 
-            // case TokenCategory.PARENTHESIS_OPEN:
-            //     Expect(TokenCategory.PARENTHESIS_OPEN);
-            //     Expression();
-            //     Expect(TokenCategory.PARENTHESIS_CLOSE);
-            //     break;
+            case TokenCategory.FALSE:
+                Expect(TokenCategory.FALSE);
+                break;
 
             // case TokenCategory.NEG:
             //     Expect(TokenCategory.NEG);
             //     SimpleExpression();
             //     break;
 
-            // default:
-            //     throw new SyntaxError(firstOfSimpleExpression, 
-            //                           tokenStream.Current);
-            // }
+            default:
+                throw new SyntaxError(firstOfSimpleExpression, 
+                                      tokenStream.Current);
+            }
+        }
+
+        public void Procedure() {
+            Expect(TokenCategory.PROCEDURE);
+            Expect(TokenCategory.IDENTIFIER);
         }
 
         public void Operator() {
