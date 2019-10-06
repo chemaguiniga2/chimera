@@ -107,9 +107,60 @@ namespace Chimera {
             Expect(TokenCategory.EOF);
         }
 
-        public void Declaration() {
-            Type();
+        public void ConstantDeclaration() {
             Expect(TokenCategory.IDENTIFIER);
+            Expect(TokenCategory.CONSTANTDECLARATION);
+            Literal();
+            Expect(TokenCategory.ENDLINE);
+        }
+
+        public void Literal(){
+            switch(CurrentToken){
+                case TokenCategory.INITLIST:
+                    List();
+                    break;
+                case TokenCategory.INTEGERLITERAL:
+                    SimpleLiteral();
+                    break;
+                case TokenCategory.STRINGLITERAL:
+                    SimpleLiteral();
+                    break;
+                case TokenCategory.BOOLEANITERAL:
+                    SimpleLiteral();
+                    break;
+                default:
+                    throw new SyntaxError(firstOfSimpleExpression, 
+                                        tokenStream.Current);            
+            }
+        }
+
+        public void SimpleLiteral(){
+            switch (CurrentToken) {
+                case TokenCategory.INTEGERLITERAL:
+                    Expect(TokenCategory.INTEGERLITERAL);
+                    break;
+                case TokenCategory.STRINGLITERAL:
+                    Expect(TokenCategory.STRINGLITERAL);
+                    break;
+                case TokenCategory.BOOLEANITERAL:
+                    Expect(TokenCategory.BOOLEANITERAL);
+                    break;
+                default:
+                    throw new SyntaxError(firstOfSimpleExpression, 
+                                        tokenStream.Current);
+            }
+        }
+
+        public void List(){
+            Expect(TokenCategory.INITLIST);
+            if(CurrentToken == TokenCategory.INTEGERLITERAL || CurrentToken == TokenCategory.STRINGLITERAL || CurrentToken == TokenCategory.BOOLEANITERAL){
+                SimpleExpression();
+                while(CurrentToken == TokenCategory.COMMA){
+                    Expect(TokenCategory.COMMA);
+                    SimpleLiteral();
+                }
+            }            
+            Expect(TokenCategory.ENDLINE);
         }
 
         public void Statement() {
