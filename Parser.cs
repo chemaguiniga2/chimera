@@ -238,13 +238,13 @@ namespace Chimera {
                 If();
                 break;
             
-            case TokenCategory.FOR:
-                // for function
-                // If();
-                // break;
-
             case TokenCategory.LOOP:
                 // loop function
+                Loop();
+                break;
+
+            case TokenCategory.FOR:
+                // for function
                 // If();
                 // break;
 
@@ -301,12 +301,29 @@ namespace Chimera {
 
         public void If() {
             Expect(TokenCategory.IF);
-            // Expression();
+            Expression();
             Expect(TokenCategory.THEN);
-            // while (firstOfStatement.Contains(CurrentToken)) {
-            //     Statement();
-            // }
-            // Expect(TokenCategory.END);
+            while (firstOfStatement.Contains(CurrentToken)) {
+                Statement();
+            }
+            if (CurrentToken == TokenCategory.ELSEIF) {
+                Expression();
+                Expect(TokenCategory.THEN);
+                Statement();
+            } else if (CurrentToken == TokenCategory.ELSE) {
+                Statement();
+            }
+            Expect(TokenCategory.END);
+            Expect(TokenCategory.ENDLINE);
+        }
+
+        public void Loop() {
+            Expect(TokenCategory.LOOP);
+            while(firstOfStatement.Contains(CurrentToken)) {
+                Statement();
+            }
+            Expect(TokenCategory.END);
+            Expect(TokenCategory.ENDLINE);
         }
 
         public void Expression() {
@@ -358,6 +375,14 @@ namespace Chimera {
         public void Procedure() {
             Expect(TokenCategory.PROCEDURE);
             Expect(TokenCategory.IDENTIFIER);
+            Expect(TokenCategory.INITPARENTHESIS);
+            //Identificacion de parametros cero o muchas veces
+            Expect(TokenCategory.CLOSINGPARENTHESIS);
+            if(CurrentToken == TokenCategory.DECLARATION) {
+
+            }
+
+
         }
 
         public void Operator() {
