@@ -116,6 +116,58 @@ namespace Chimera {
             Expect(TokenCategory.ENDLINE);
         }
 
+        public void ParameterDeclaration()
+        {
+            Expect(TokenCategory.IDENTIFIER);
+            while(CurrentToken == TokenCategory.COMMA)
+            {
+                Expect(TokenCategory.IDENTIFIER);
+            }
+            Expect(TokenCategory.DECLARATION);
+            Type();
+            Expect(TokenCategory.ENDLINE);
+        }
+
+        public void ProcedureDeclaration()
+        {
+            Expect(TokenCategory.PROCEDURE);
+            Expect(TokenCategory.IDENTIFIER);
+            Expect(TokenCategory.INITPARENTHESIS);
+            while(CurrentToken == TokenCategory.IDENTIFIER)
+            {
+                ParameterDeclaration();
+            }
+            Expect(TokenCategory.CLOSINGPARENTHESIS);
+            if(CurrentToken == TokenCategory.DECLARATION)
+            {
+                Type();
+            }
+            Expect(TokenCategory.ENDLINE); // hay que agregar esto, dache
+            if (CurrentToken == TokenCategory.CONST)
+            {
+                do
+                {
+                    ConstantDeclaration();
+                } while (CurrentToken == TokenCategory.IDENTIFIER);
+            }
+
+            if (CurrentToken == TokenCategory.VAR)
+            {
+                do
+                {
+                    VariableDeclaration();
+                } while (CurrentToken == TokenCategory.IDENTIFIER);
+            }
+
+            Expect(TokenCategory.BEGIN);
+            while (firstOfStatement.Contains(CurrentToken))
+            {
+                Statement();
+            }
+            Expect(TokenCategory.END);
+            Expect(TokenCategory.ENDLINE);
+        }
+
         public void Literal(){
             switch(CurrentToken){
                 case TokenCategory.INITLIST:
@@ -221,6 +273,36 @@ namespace Chimera {
             SimpleType();
         }
 
+
+        public void SimpleLiteral(){
+            switch (CurrentToken) {
+                case TokenCategory.INTEGERLITERAL:
+                    Expect(TokenCategory.INTEGERLITERAL);
+                    break;
+                case TokenCategory.STRINGLITERAL:
+                    Expect(TokenCategory.STRINGLITERAL);
+                    break;
+                case TokenCategory.BOOLEANITERAL:
+                    Expect(TokenCategory.BOOLEANITERAL);
+                    break;
+                default:
+                    throw new SyntaxError(firstOfSimpleExpression, 
+                                        tokenStream.Current);
+            }
+        }
+
+        public void List(){
+            Expect(TokenCategory.INITLIST);
+            if(CurrentToken == TokenCategory.INTEGERLITERAL || CurrentToken == TokenCategory.STRINGLITERAL || CurrentToken == TokenCategory.BOOLEANITERAL){
+                SimpleExpression();
+                while(CurrentToken == TokenCategory.COMMA){
+                    Expect(TokenCategory.COMMA);
+                    SimpleLiteral();
+                }
+            }            
+            Expect(TokenCategory.ENDLINE);
+        }
+
         public void Statement() {
             switch (CurrentToken) {
                 case TokenCategory.INTEGER:
@@ -297,12 +379,29 @@ namespace Chimera {
 
         public void If() {
             Expect(TokenCategory.IF);
-            // Expression();
+            Expression();
             Expect(TokenCategory.THEN);
-            // while (firstOfStatement.Contains(CurrentToken)) {
-            //     Statement();
-            // }
-            // Expect(TokenCategory.END);
+            while (firstOfStatement.Contains(CurrentToken)) {
+                Statement();
+            }
+            if (CurrentToken == TokenCategory.ELSEIF) {
+                Expression();
+                Expect(TokenCategory.THEN);
+                Statement();
+            } else if (CurrentToken == TokenCategory.ELSE) {
+                Statement();
+            }
+            Expect(TokenCategory.END);
+            Expect(TokenCategory.ENDLINE);
+        }
+
+        public void Loop() {
+            Expect(TokenCategory.LOOP);
+            while(firstOfStatement.Contains(CurrentToken)) {
+                Statement();
+            }
+            Expect(TokenCategory.END);
+            Expect(TokenCategory.ENDLINE);
         }
 
         public void Expression() {
@@ -354,6 +453,14 @@ namespace Chimera {
         public void Procedure() {
             Expect(TokenCategory.PROCEDURE);
             Expect(TokenCategory.IDENTIFIER);
+            Expect(TokenCategory.INITPARENTHESIS);
+            //Identificacion de parametros cero o muchas veces
+            Expect(TokenCategory.CLOSINGPARENTHESIS);
+            if(CurrentToken == TokenCategory.DECLARATION) {
+
+            }
+
+
         }
 
         public void Operator() {
