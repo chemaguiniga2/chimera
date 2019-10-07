@@ -396,7 +396,8 @@ namespace Chimera {
 
         public void LogicExpression(){
             RelationalExpression();
-            while(CurrentToken == TokenCategory.AND | CurrentToken == TokenCategory.OR | CurrentToken == TokenCategory.XOR){
+            //while(CurrentToken == TokenCategory.AND | CurrentToken == TokenCategory.OR | CurrentToken == TokenCategory.XOR){
+            while(firstOfOperator.Contains(CurrentToken)){
                 LogicOperator();
                 RelationalExpression();
             }            
@@ -541,14 +542,15 @@ namespace Chimera {
                     Call();
                 }
                 break;
-                if (CurrentToken = TokenCategory.INITBRACKET)
-                {
-                    Expression();
-                    Expect(TokenCategory.CLOSINGBRACKET);
-                }
-                default:
+            default:
                 throw new SyntaxError(firstOfSimpleExpression, 
                                       tokenStream.Current);
+            }
+
+            if (CurrentToken = TokenCategory.INITBRACKET)
+            {
+                Expression();
+                Expect(TokenCategory.CLOSINGBRACKET);
             }
         }
 
