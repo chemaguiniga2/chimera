@@ -309,10 +309,10 @@ namespace Chimera {
                     AssignmentCallStatement();
                     break;
                 case TokenCategory.IF:
-                    IfStatement();
+                    If();
                     break;
                 case TokenCategory.LOOP:
-                    LoopStatement();
+                    Loop();
                     break;
                 case TokenCategory.FOR:
                     ForStatement();
