@@ -390,6 +390,37 @@ namespace Chimera {
             Expect(TokenCategory.ENDLINE);
         }
 
+        public void For()
+        {
+            Expect(TokenCategory.FOR);
+            Expect(TokenCategory.IDENTIFIER);
+            Expect(TokenCategory.IN);
+            Expression();
+            Expect(TokenCategory.DO);
+            while (firstOfStatement.Contains(CurrentToken))
+            {
+                Statement();
+            }
+            Expect(TokenCategory.END);
+            Expect(TokenCategory.ENDLINE);
+        }
+
+        public void Return()
+        {
+            Expect(TokenCategory.RETURN);
+            if (firstOfSimpleExpression.Contains(CurrentToken))
+            {
+                Expression();
+            }
+            Expect(TokenCategory.ENDLINE);
+        }
+
+        public void Exit()
+        {
+            Expect(TokenCategory.EXIT);
+            Expect(TokenCategory.ENDLINE);
+        }
+
         public void Expression() {
             SimpleExpression();
             //ver si descomentar lo siguiente
