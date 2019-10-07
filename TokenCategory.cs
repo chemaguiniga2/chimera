@@ -1,7 +1,7 @@
 enum TokenCategory {
 	CONST,  // FOD
 	VAR,  // FOD
-	PROGRAM, 
+	PROGRAM,  // FOD
 	END,
 	INTEGER,
 	STRING,

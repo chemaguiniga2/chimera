@@ -56,6 +56,8 @@ namespace Chimera {
                 TokenCategory.BOOLEANITERAL,
                 TokenCategory.INITLIST,
                 TokenCategory.INITBRACKET,
+                TokenCategory.NOT,
+                TokenCategory.SUBSTRACT,
             };
                 
         IEnumerator<Token> tokenStream;
@@ -153,7 +155,7 @@ namespace Chimera {
 
         public void List(){
             Expect(TokenCategory.INITLIST);
-            if(CurrentToken == TokenCategory.INTEGERLITERAL || CurrentToken == TokenCategory.STRINGLITERAL || CurrentToken == TokenCategory.BOOLEANITERAL){
+            if(CurrentToken == TokenCategory.INTEGERLITERAL | CurrentToken == TokenCategory.STRINGLITERAL | CurrentToken == TokenCategory.BOOLEANITERAL){
                 SimpleExpression();
                 while(CurrentToken == TokenCategory.COMMA){
                     Expect(TokenCategory.COMMA);
@@ -220,71 +222,65 @@ namespace Chimera {
         }
 
         public void Statement() {
-
-            //considerar aqui el else if
-
             switch (CurrentToken) {
+                case TokenCategory.INTEGER:
+                    AssignmentCallStatement();
+                    break;
+                case TokenCategory.IF:
+                    IfStatement();
+                    break;
+                case TokenCategory.LOOP:
+                    LoopStatement();
+                    break;
+                case TokenCategory.FOR:
+                    ForStatement();
+                    break;
+                case TokenCategory.RETURN:
+                    ReturnStatement();
+                    break;
+                case TokenCategory.EXIT:
+                    EXITStatement();
+                    break;
+                default:
+                    throw new SyntaxError(firstOfStatement, 
+                                        tokenStream.Current);
+            }            
+        }
 
-            case TokenCategory.IDENTIFIER:
-                Assignment();
-                break;
-
-            case TokenCategory.PROCEDURE:
-                // Procedure function
-                Procedure();
-                break;
-
-            case TokenCategory.IF:
-                If();
-                break;
-            
-            case TokenCategory.FOR:
-                // for function
-                // If();
-                // break;
-
-            case TokenCategory.LOOP:
-                // loop function
-                // If();
-                // break;
-
-            case TokenCategory.BEGIN:
-                // BEGIN function
-                // If();
-                // break;
-
-            case TokenCategory.RETURN:
-                // return function
-                // If();
-                // break;
-            
-            case TokenCategory.DO:
-                // do function
-                // If();
-                // break;
-
-            default:
-                throw new SyntaxError(firstOfStatement, 
-                                      tokenStream.Current);
+        public void AssignmentCallStatement(){
+            Expect(TokenCategory.IDENTIFIER);
+            if(CurrentToken == TokenCategory.INITBRACKET | CurrentToken == TokenCategory.CONSTANTDECLARATION ){
+                AssignmentStatement();
+            }
+            else if(CurrentToken == TokenCategory.INITPARENTHESIS){
+                CallStatement();
             }
         }
 
-        public void Type() {
-            switch (CurrentToken) {
-
-            case TokenCategory.CONST:
-                Expect(TokenCategory.CONST);
-                break;
-
-            case TokenCategory.VAR:
-                Expect(TokenCategory.VAR);
-                break;
-
-            default:
-                throw new SyntaxError(firstOfDeclaration, 
-                                      tokenStream.Current);
+        public void AssignmentStatement(){
+            if(CurrentToken == TokenCategory.INITBRACKET){
+                Expect(TokenCategory.INITBRACKET);
+                Expression();
+                Expect(TokenCategory.CLOSINGBRACKET);
+                Expect(TokenCategory.ConstantDeclaration);
+                Expression();
+                Expect(TokenCategory.ENDLINE);
             }
         }
+
+        public void CallStatement(){
+            Expect(TokenCategory.INITPARENTHESIS);
+            if(CurrentToken == TokenCategory.NOT | CurrentToken == TokenCategory.SUBSTRACT | CurrentToken == TokenCategory.INTEGERLITERAL | CurrentToken == TokenCategory.STRINGLITERAL | CurrentToken == TokenCategory.BOOLEANITERAL){
+                Expression();
+                while(CurrentToken == TokenCategory.COMMA){
+                    Expect(TokenCategory.COMMA);
+                    Expression();
+                }                
+            }
+            Expect(TokenCategory.CLOSINGPARENTHESIS);
+            Expect(TokenCategory.ENDLINE);
+        }
+
 
         public void Assignment() {
             Expect(TokenCategory.IDENTIFIER);
