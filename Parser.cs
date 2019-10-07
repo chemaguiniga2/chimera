@@ -141,6 +141,7 @@ namespace Chimera {
             Expect(TokenCategory.CLOSINGPARENTHESIS);
             if(CurrentToken == TokenCategory.DECLARATION)
             {
+                Expect(TokenCategory.DECLARATION);
                 Type();
             }
             Expect(TokenCategory.ENDLINE); // hay que agregar esto, dache
@@ -220,14 +221,18 @@ namespace Chimera {
 
         public void VariableDeclaration(){
             Expect(TokenCategory.VAR);
-            Expect(TokenCategory.IDENTIFIER);
-            while(CurrentToken == TokenCategory.COMMA){
-                Expect(TokenCategory.COMMA);
+            do{
                 Expect(TokenCategory.IDENTIFIER);
+                while(CurrentToken == TokenCategory.COMMA){
+                    Expect(TokenCategory.COMMA);
+                    Expect(TokenCategory.IDENTIFIER);
+                }
+                Expect(TokenCategory.DECLARATION);
+                Type();
+                Expect(TokenCategory.ENDLINE);
             }
-            Expect(TokenCategory.DECLARATION);
-            Type();
-            Expect(TokenCategory.ENDLINE);
+            while(CurrentToken == TokenCategory.IDENTIFIER);
+            
         }
 
         public void Type(){
@@ -303,6 +308,7 @@ namespace Chimera {
 
         public void AssignmentCallStatement(){
             Expect(TokenCategory.IDENTIFIER);
+            //Console.WriteLine(CurrentToken);
             if(CurrentToken == TokenCategory.INITBRACKET | CurrentToken == TokenCategory.CONSTANTDECLARATION ){
                 AssignmentStatement();
             }
@@ -312,19 +318,20 @@ namespace Chimera {
         }
 
         public void AssignmentStatement(){
+
             if(CurrentToken == TokenCategory.INITBRACKET){
                 Expect(TokenCategory.INITBRACKET);
                 Expression();
                 Expect(TokenCategory.CLOSINGBRACKET);
-                Expect(TokenCategory.CONSTANTDECLARATION);
-                Expression();
-                Expect(TokenCategory.ENDLINE);
             }
+            Expect(TokenCategory.CONSTANTDECLARATION);
+            Expression();
+            Expect(TokenCategory.ENDLINE);
         }
 
         public void CallStatement(){
             Expect(TokenCategory.INITPARENTHESIS);
-            if(CurrentToken == TokenCategory.NOT | CurrentToken == TokenCategory.SUBSTRACT | CurrentToken == TokenCategory.INTEGERLITERAL | CurrentToken == TokenCategory.STRINGLITERAL | CurrentToken == TokenCategory.BOOLEANITERAL){
+            if(firstOfSimpleExpression.Contains(CurrentToken)){
                 Expression();
                 while(CurrentToken == TokenCategory.COMMA){
                     Expect(TokenCategory.COMMA);
@@ -342,12 +349,21 @@ namespace Chimera {
             while (firstOfStatement.Contains(CurrentToken)) {
                 Statement();
             }
-            if (CurrentToken == TokenCategory.ELSEIF) {
-                Expression();
-                Expect(TokenCategory.THEN);
-                Statement();
-            } else if (CurrentToken == TokenCategory.ELSE) {
-                Statement();
+            if(CurrentToken == TokenCategory.ELSE) {
+                while (CurrentToken == TokenCategory.ELSEIF) {
+                    Expect(TokenCategory.ELSEIF);
+                    Expression();
+                    Expect(TokenCategory.THEN);
+                    while (firstOfStatement.Contains(CurrentToken)) {
+                        Statement();
+                    }
+                }
+            }
+            if(CurrentToken == TokenCategory.ELSE) {
+                Expect(TokenCategory.ELSE);
+                while (firstOfStatement.Contains(CurrentToken)) {
+                    Statement();
+                }
             }
             Expect(TokenCategory.END);
             Expect(TokenCategory.ENDLINE);
@@ -407,7 +423,7 @@ namespace Chimera {
 
         public void RelationalExpression(){
             SumExpression();
-            while(CurrentToken == TokenCategory.EQUAL | CurrentToken == TokenCategory.INEQUAL | CurrentToken == TokenCategory.LESSTHAN | CurrentToken == TokenCategory.BIGGERTHAN | CurrentToken == TokenCategory.LESSOREQUAL | CurrentToken == TokenCategory.BIGGEROREQUAL) {
+            while(CurrentToken == TokenCategory.EQUAL | CurrentToken == TokenCategory.INEQUAL | CurrentToken == TokenCategory.LESSOREQUAL | CurrentToken == TokenCategory.BIGGEROREQUAL | CurrentToken == TokenCategory.LESSTHAN | CurrentToken == TokenCategory.BIGGERTHAN) {
                 RelationalOperator();
                 SumExpression();
             }
@@ -548,25 +564,17 @@ namespace Chimera {
                 throw new SyntaxError(firstOfSimpleExpression, 
                     tokenStream.Current);
             }
-//<<<<<<< HEAD
-
             if (CurrentToken == TokenCategory.INITBRACKET)
-//=======
-            if (CurrentToken == TokenCategory.INITBRACKET)
-//>>>>>>> 20d8ca772040af63f787ef44ef401d54daa5e786
             {
                 Expression();
                 Expect(TokenCategory.CLOSINGBRACKET);
             }
-//<<<<<<< HEAD
-//=======
-                
-//>>>>>>> 20d8ca772040af63f787ef44ef401d54daa5e786
         }
 
         public void Call(){
             Expect(TokenCategory.INITPARENTHESIS);
-            if(CurrentToken == TokenCategory.NOT | CurrentToken == TokenCategory.SUBSTRACT | CurrentToken == TokenCategory.INTEGERLITERAL | CurrentToken == TokenCategory.STRINGLITERAL | CurrentToken == TokenCategory.BOOLEANITERAL){
+            //if(CurrentToken == TokenCategory.NOT | CurrentToken == TokenCategory.SUBSTRACT | CurrentToken == TokenCategory.INTEGERLITERAL | CurrentToken == TokenCategory.STRINGLITERAL | CurrentToken == TokenCategory.BOOLEANITERAL | CurrentToken == TokenCategory.IDENTIFIER){
+            if(firstOfSimpleExpression.Contains(CurrentToken)){ 
                 Expression();
                 while(CurrentToken == TokenCategory.COMMA){
                     Expect(TokenCategory.COMMA);

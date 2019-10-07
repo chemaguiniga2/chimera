@@ -60,7 +60,7 @@ procedure Max(
         if n = 0 then
             return 0;
         end;
-
+        //DUdaaa aquiiiiiiiiiiiiiiiiii
         largest := lst[0];
 
         i := 1;
