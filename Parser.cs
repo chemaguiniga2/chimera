@@ -114,6 +114,57 @@ namespace Chimera {
             Expect(TokenCategory.ENDLINE);
         }
 
+        public void ParameterDeclaration()
+        {
+            Expect(TokenCategory.IDENTIFIER);
+            while(CurrentToken == TokenCategory.COMMA)
+            {
+                Expect(TokenCategory.IDENTIFIER);
+            }
+            Expect(TokenCategory.DECLARATION);
+            Type();
+            Expect(TokenCategory.ENDLINE);
+        }
+
+        public void ProcedureDeclaration()
+        {
+            Expect(TokenCategory.PROCEDURE);
+            Expect(TokenCategory.IDENTIFIER);
+            Expect(TokenCategory.INITPARENTHESIS);
+            while(CurrentToken == TokenCategory.IDENTIFIER)
+            {
+                ParameterDeclaration();
+            }
+            Expect(TokenCategory.CLOSINGPARENTHESIS);
+            if(CurrentToken == TokenCategory.DECLARATION)
+            {
+                Type();
+            }
+            if (CurrentToken == TokenCategory.CONST)
+            {
+                do
+                {
+                    ConstantDeclaration();
+                } while (CurrentToken == TokenCategory.IDENTIFIER);
+            }
+
+            if (CurrentToken == TokenCategory.VAR)
+            {
+                do
+                {
+                    VariableDeclaration();
+                } while (CurrentToken == TokenCategory.IDENTIFIER);
+            }
+
+            Expect(TokenCategory.BEGIN);
+            while (firstOfStatement.Contains(CurrentToken))
+            {
+                Statement();
+            }
+            Expect(TokenCategory.END);
+            Expect(TokenCategory.ENDLINE);
+        }
+
         public void Literal(){
             switch(CurrentToken){
                 case TokenCategory.INITLIST:
@@ -161,62 +212,6 @@ namespace Chimera {
                 }
             }            
             Expect(TokenCategory.ENDLINE);
-        }
-
-        public void VariableDeclaration(){
-            Expect(TokenCategory.IDENTIFIER);
-            while(CurrentToken == TokenCategory.COMMA){
-                Expect(TokenCategory.COMMA);
-                Expect(TokenCategory.IDENTIFIER);
-            }
-            Expect(TokenCategory.DECLARATION);
-            Type();
-            Expect(TokenCategory.ENDLINE);
-        }
-
-        public void Type(){
-            switch(CurrentToken){
-                case TokenCategory.LIST:
-                    ListType();
-                    break;
-                case TokenCategory.INTEGER:
-                    SimpleType();
-                    break;
-                case TokenCategory.STRING:
-                    SimpleType();
-                    break;
-                case TokenCategory.BOOLEAN:
-                    SimpleType();
-                    break;
-                default:
-                // No estoy segura de qué clase mandar
-                    throw new SyntaxError(firstOfSimpleExpression, 
-                                        tokenStream.Current);            
-            }
-        }
-
-        public void SimpleType(){
-            switch (CurrentToken) {
-                case TokenCategory.INTEGER:
-                    Expect(TokenCategory.INTEGER);
-                    break;
-                case TokenCategory.STRING:
-                    Expect(TokenCategory.STRING);
-                    break;
-                case TokenCategory.BOOLEAN:
-                    Expect(TokenCategory.BOOLEAN);
-                    break;
-                default:
-                // No estoy segura de que clase mandar
-                    throw new SyntaxError(firstOfSimpleExpression, 
-                                        tokenStream.Current);
-            }
-        }
-
-        public void ListType(){
-            Expect(TokenCategory.LIST);
-            Expect(TokenCategory.OF);
-            SimpleType();
         }
 
         public void Statement() {
