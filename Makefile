@@ -1,5 +1,5 @@
-chimera.exe: Driver.cs Scanner.cs Token.cs TokenCategory.cs               
-	mcs -out:chimera.exe Driver.cs Scanner.cs Token.cs TokenCategory.cs
+chimera.exe: Driver.cs Scanner.cs Token.cs TokenCategory.cs Parser.cs SyntaxError.cs                
+	mcs -out:chimera.exe Driver.cs Scanner.cs Token.cs TokenCategory.cs Parser.cs SyntaxError.cs
 			
 clean:
-	rm chimera.e
+	rm chimera.exe
