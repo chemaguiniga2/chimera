@@ -565,6 +565,18 @@ namespace Chimera {
             }
         }
 
+        public void Call(){
+            Expect(TokenCategory.INITPARENTHESIS);
+            if(CurrentToken == TokenCategory.NOT | CurrentToken == TokenCategory.SUBSTRACT | CurrentToken == TokenCategory.INTEGERLITERAL | CurrentToken == TokenCategory.STRINGLITERAL | CurrentToken == TokenCategory.BOOLEANITERAL){
+                Expression();
+                while(CurrentToken == TokenCategory.COMMA){
+                    Expect(TokenCategory.COMMA);
+                    Expression();
+                }                
+            }
+            Expect(TokenCategory.CLOSINGPARENTHESIS);            
+        }
+
         public void Procedure() {
             Expect(TokenCategory.PROCEDURE);
             Expect(TokenCategory.IDENTIFIER);
