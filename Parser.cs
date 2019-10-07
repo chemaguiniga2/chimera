@@ -344,7 +344,7 @@ namespace Chimera {
                 Expect(TokenCategory.INITBRACKET);
                 Expression();
                 Expect(TokenCategory.CLOSINGBRACKET);
-                Expect(TokenCategory.ConstantDeclaration);
+                Expect(TokenCategory.CONSTANTDECLARATION);
                 Expression();
                 Expect(TokenCategory.ENDLINE);
             }
@@ -559,6 +559,10 @@ namespace Chimera {
                     Call();
                 }
                 break;
+            if(CurrentToken = TokenCategory.INITBRACKET){
+                Expression();
+                Expect(TokenCategory.CLOSINGBRACKET);
+            }
             default:
                 throw new SyntaxError(firstOfSimpleExpression, 
                                       tokenStream.Current);
