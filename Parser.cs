@@ -517,7 +517,19 @@ namespace Chimera {
         }
 
         public void UnaryExpression() {
-            
+            switch(CurrentToken) {
+                case TokenCategory.NOT:
+                    Expect(TokenCategory.NOT);
+                    UnaryExpression();
+                    break;
+                case TokenCategory.SUBSTRACT:
+                    Expect(TokenCategory.SUBSTRACT);
+                    UnaryExpression();
+                    break;
+                default:
+                    SimpleExpression();
+                    break;
+            }
         }
 
         public void MulOperator() {
