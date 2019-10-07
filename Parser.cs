@@ -273,36 +273,6 @@ namespace Chimera {
             SimpleType();
         }
 
-
-        public void SimpleLiteral(){
-            switch (CurrentToken) {
-                case TokenCategory.INTEGERLITERAL:
-                    Expect(TokenCategory.INTEGERLITERAL);
-                    break;
-                case TokenCategory.STRINGLITERAL:
-                    Expect(TokenCategory.STRINGLITERAL);
-                    break;
-                case TokenCategory.BOOLEANITERAL:
-                    Expect(TokenCategory.BOOLEANITERAL);
-                    break;
-                default:
-                    throw new SyntaxError(firstOfSimpleExpression, 
-                                        tokenStream.Current);
-            }
-        }
-
-        public void List(){
-            Expect(TokenCategory.INITLIST);
-            if(CurrentToken == TokenCategory.INTEGERLITERAL || CurrentToken == TokenCategory.STRINGLITERAL || CurrentToken == TokenCategory.BOOLEANITERAL){
-                SimpleExpression();
-                while(CurrentToken == TokenCategory.COMMA){
-                    Expect(TokenCategory.COMMA);
-                    SimpleLiteral();
-                }
-            }            
-            Expect(TokenCategory.ENDLINE);
-        }
-
         public void Statement() {
             switch (CurrentToken) {
                 case TokenCategory.IDENTIFIER:
@@ -315,13 +285,13 @@ namespace Chimera {
                     Loop();
                     break;
                 case TokenCategory.FOR:
-                    ForStatement();
+                    For();
                     break;
                 case TokenCategory.RETURN:
-                    ReturnStatement();
+                    Return();
                     break;
                 case TokenCategory.EXIT:
-                    EXITStatement();
+                    Exit();
                     break;
                 default:
                     throw new SyntaxError(firstOfStatement, 
@@ -571,11 +541,12 @@ namespace Chimera {
                     Call();
                 }
                 break;
-            if(CurrentToken = TokenCategory.INITBRACKET){
-                Expression();
-                Expect(TokenCategory.CLOSINGBRACKET);
-            }
-            default:
+                if (CurrentToken = TokenCategory.INITBRACKET)
+                {
+                    Expression();
+                    Expect(TokenCategory.CLOSINGBRACKET);
+                }
+                default:
                 throw new SyntaxError(firstOfSimpleExpression, 
                                       tokenStream.Current);
             }
