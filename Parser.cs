@@ -577,20 +577,6 @@ namespace Chimera {
             Expect(TokenCategory.CLOSINGPARENTHESIS);            
         }
 
-        public void Procedure() {
-            Expect(TokenCategory.PROCEDURE);
-            Expect(TokenCategory.IDENTIFIER);
-            Expect(TokenCategory.INITPARENTHESIS);
-            //Identificacion de parametros cero o muchas veces
-            Expect(TokenCategory.CLOSINGPARENTHESIS);
-            if(CurrentToken == TokenCategory.DECLARATION) {
-
-            }
-
-
-        }
-
-        
 
     }
 }
