@@ -185,6 +185,63 @@ namespace Chimera {
             }
         }
 
+        public void VariableDeclaration(){
+            Expect(TokenCategory.IDENTIFIER);
+            while(CurrentToken == TokenCategory.COMMA){
+                Expect(TokenCategory.COMMA);
+                Expect(TokenCategory.IDENTIFIER);
+            }
+            Expect(TokenCategory.DECLARATION);
+            Type();
+            Expect(TokenCategory.ENDLINE);
+        }
+
+        public void Type(){
+            switch(CurrentToken){
+                case TokenCategory.LIST:
+                    ListType();
+                    break;
+                case TokenCategory.INTEGER:
+                    SimpleType();
+                    break;
+                case TokenCategory.STRING:
+                    SimpleType();
+                    break;
+                case TokenCategory.BOOLEAN:
+                    SimpleType();
+                    break;
+                default:
+                // No estoy segura de qué clase mandar
+                    throw new SyntaxError(firstOfSimpleExpression, 
+                                        tokenStream.Current);            
+            }
+        }
+
+        public void SimpleType(){
+            switch (CurrentToken) {
+                case TokenCategory.INTEGER:
+                    Expect(TokenCategory.INTEGER);
+                    break;
+                case TokenCategory.STRING:
+                    Expect(TokenCategory.STRING);
+                    break;
+                case TokenCategory.BOOLEAN:
+                    Expect(TokenCategory.BOOLEAN);
+                    break;
+                default:
+                // No estoy segura de que clase mandar
+                    throw new SyntaxError(firstOfSimpleExpression, 
+                                        tokenStream.Current);
+            }
+        }
+
+        public void ListType(){
+            Expect(TokenCategory.LIST);
+            Expect(TokenCategory.OF);
+            SimpleType();
+        }
+
+
         public void SimpleLiteral(){
             switch (CurrentToken) {
                 case TokenCategory.INTEGERLITERAL:
