@@ -363,20 +363,6 @@ namespace Chimera {
             Expect(TokenCategory.ENDLINE);
         }
 
-
-        public void Assignment() {
-            Expect(TokenCategory.IDENTIFIER);
-            //Expression(); revisar como verificar 
-            Expect(TokenCategory.CONSTANTDECLARATION);
-            Expression(); //Seguir revisando expression()
-            Expect(TokenCategory.ENDLINE);
-        }
-
-        public void Print() {
-            // Expect(TokenCategory.PRINT);
-            // Expression();
-        }
-
         public void If() {
             Expect(TokenCategory.IF);
             Expression();
