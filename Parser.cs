@@ -208,7 +208,7 @@ namespace Chimera {
         public void List(){
             Expect(TokenCategory.INITLIST);
             if(CurrentToken == TokenCategory.INTEGERLITERAL | CurrentToken == TokenCategory.STRINGLITERAL | CurrentToken == TokenCategory.BOOLEANITERAL){
-                SimpleExpression();
+                SimpleLiteral();
                 while(CurrentToken == TokenCategory.COMMA){
                     Expect(TokenCategory.COMMA);
                     SimpleLiteral();
