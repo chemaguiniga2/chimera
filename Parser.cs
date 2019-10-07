@@ -433,14 +433,50 @@ namespace Chimera {
         }
 
         public void RelationalExpression(){
-
+            SumExpression();
+            while(CurrentToken == TokenCategory.EQUAL | CurrentToken == TokenCategory.INEQUAL | CurrentToken == TokenCategory.LESSTHAN | CurrentToken == TokenCategory.BIGGERTHAN | CurrentToken == TokenCategory.LESSOREQUAL | CurrentToken == TokenCategory.BIGGEROREQUAL) {
+                RelationalOperator();
+                SumExpression();
+            }
         }
 
         public void LogicOperator(){
 
         }
 
+        public void SumExpression() {
+            MulExpression();
+            while(CurrentToken == TokenCategory.ADDITION | CurrentToken == TokenCategory.SUBSTRACT) {
+                SumOperator();
+                MulExpression();
+            }
 
+        }
+
+        public void RelationalOperator() {
+
+        }
+
+        public void MulExpression() {
+            UnaryExpression();
+            while(CurrentToken == TokenCategory.MULTIPLICATION | CurrentToken == TokenCategory.DIV | CurrentToken == TokenCategory.REM) {
+                MulOperator();
+                UnaryExpression();
+            }
+        }
+
+
+        public void SumOperator() {
+
+        }
+
+        public void UnaryExpression() {
+            
+        }
+
+        public void MulOperator() {
+
+        }
         public void SimpleExpression() {
             switch (CurrentToken) { 
             case TokenCategory.INITPARENTHESIS:
