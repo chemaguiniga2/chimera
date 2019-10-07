@@ -110,6 +110,7 @@ namespace Chimera {
         }
 
         public void ConstantDeclaration() {
+            Expect(TokenCategory.CONST);
             Expect(TokenCategory.IDENTIFIER);
             Expect(TokenCategory.CONSTANTDECLARATION);
             Literal();
@@ -218,6 +219,7 @@ namespace Chimera {
         }
 
         public void VariableDeclaration(){
+            Expect(TokenCategory.VAR);
             Expect(TokenCategory.IDENTIFIER);
             while(CurrentToken == TokenCategory.COMMA){
                 Expect(TokenCategory.COMMA);
