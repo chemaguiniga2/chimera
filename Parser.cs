@@ -390,15 +390,27 @@ namespace Chimera {
             Expect(TokenCategory.ENDLINE);
         }
 
-        public void Expression() {
-            SimpleExpression();
-            //ver si descomentar lo siguiente
-            while (firstOfOperator.Contains(CurrentToken)) {
-                // Operator();
-                SimpleExpression();
-            }
+        public void Expression(){
+            LogicExpression();
         }
 
+        public void LogicExpression(){
+            RelationalExpression();
+            while(CurrentToken == TokenCategory.AND | CurrentToken == TokenCategory.OR | CurrentToken == TokenCategory.XOR){
+                LogicOperator();
+                RelationalExpression();
+            }            
+        }
+
+        public void RelationalExpression(){
+
+        }
+
+        public void LogicOperator(){
+
+        }
+
+        // es la de buttercup
         public void SimpleExpression() {
 
             switch (CurrentToken) {
@@ -447,32 +459,6 @@ namespace Chimera {
             }
 
 
-        }
-
-        public void Operator() {
-
-            // switch (CurrentToken) {
-
-            // case TokenCategory.AND:
-            //     Expect(TokenCategory.AND);
-            //     break;
-
-            // case TokenCategory.LESS:
-            //     Expect(TokenCategory.LESS);
-            //     break;
-
-            // case  TokenCategory.PLUS:
-            //     Expect(TokenCategory.PLUS);
-            //     break;
-
-            // case TokenCategory.MUL:
-            //     Expect(TokenCategory.MUL);
-            //     break;
-
-            // default:
-            //     throw new SyntaxError(firstOfOperator, 
-            //                           tokenStream.Current);
-            // }
         }
 
         
