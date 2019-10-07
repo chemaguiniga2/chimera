@@ -305,7 +305,7 @@ namespace Chimera {
 
         public void Statement() {
             switch (CurrentToken) {
-                case TokenCategory.INTEGER:
+                case TokenCategory.IDENTIFIER:
                     AssignmentCallStatement();
                     break;
                 case TokenCategory.IF:
@@ -410,38 +410,30 @@ namespace Chimera {
 
         }
 
-        // es la de buttercup
+
         public void SimpleExpression() {
-
-            switch (CurrentToken) {
-
+            switch (CurrentToken) { 
+            case TokenCategory.INITPARENTHESIS:
+                Expression();
+                break;
+            case TokenCategory.INTEGERLITERAL:
+                SimpleLiteral();
+                break;
+            case TokenCategory.STRINGLITERAL:
+                SimpleLiteral();
+                break;
+            case TokenCategory.BOOLEANITERAL:
+                SimpleLiteral();
+                break;
+            case TokenCategory.INITLIST:
+                List();
+                break;
             case TokenCategory.IDENTIFIER:
                 Expect(TokenCategory.IDENTIFIER);
+                if(CurrentToken == TokenCategory.INITPARENTHESIS){
+                    Call();
+                }
                 break;
-
-            case TokenCategory.INITBRACKET:
-                Expect(TokenCategory.INITBRACKET);
-                Expression();
-                Expect(TokenCategory.CLOSINGBRACKET);
-                break;
-
-            case TokenCategory.INTEGERLITERAL:
-                Expect(TokenCategory.INTEGERLITERAL);
-                break;
-
-            case TokenCategory.TRUE:
-                Expect(TokenCategory.TRUE);
-                break;
-
-            case TokenCategory.FALSE:
-                Expect(TokenCategory.FALSE);
-                break;
-
-            // case TokenCategory.NEG:
-            //     Expect(TokenCategory.NEG);
-            //     SimpleExpression();
-            //     break;
-
             default:
                 throw new SyntaxError(firstOfSimpleExpression, 
                                       tokenStream.Current);
