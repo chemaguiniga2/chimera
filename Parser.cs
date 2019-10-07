@@ -104,8 +104,7 @@ namespace Chimera {
                 Statement();
             }
             Expect(TokenCategory.END);
-            Expect(TokenCategory.ENDLINE);                         
-
+            Expect(TokenCategory.ENDLINE); 
             Expect(TokenCategory.EOF);
         }
 
@@ -216,7 +215,7 @@ namespace Chimera {
                     SimpleLiteral();
                 }
             }            
-            Expect(TokenCategory.ENDLINE);
+            Expect(TokenCategory.CLOSINGLIST);
         }
 
         public void VariableDeclaration(){
@@ -349,7 +348,7 @@ namespace Chimera {
             while (firstOfStatement.Contains(CurrentToken)) {
                 Statement();
             }
-            if(CurrentToken == TokenCategory.ELSE) {
+            if(CurrentToken == TokenCategory.ELSEIF) {
                 while (CurrentToken == TokenCategory.ELSEIF) {
                     Expect(TokenCategory.ELSEIF);
                     Expression();
@@ -540,7 +539,9 @@ namespace Chimera {
         public void SimpleExpression() {
             switch (CurrentToken) { 
             case TokenCategory.INITPARENTHESIS:
+                Expect(TokenCategory.INITPARENTHESIS);
                 Expression();
+                Expect(TokenCategory.CLOSINGPARENTHESIS);
                 break;
             case TokenCategory.INTEGERLITERAL:
                 SimpleLiteral();
@@ -566,6 +567,7 @@ namespace Chimera {
             }
             if (CurrentToken == TokenCategory.INITBRACKET)
             {
+                Expect(TokenCategory.INITBRACKET);
                 Expression();
                 Expect(TokenCategory.CLOSINGBRACKET);
             }
