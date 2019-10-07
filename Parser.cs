@@ -441,7 +441,20 @@ namespace Chimera {
         }
 
         public void LogicOperator(){
-
+            switch(CurrentToken) {
+                case TokenCategory.AND:
+                    Expect(TokenCategory.AND);
+                    break;
+                case TokenCategory.OR:
+                    Expect(TokenCategory.OR);
+                    break;
+                case TokenCategory.XOR:
+                    Expect(TokenCategory.XOR);
+                    break;
+                default:
+                    throw new SyntaxError(firstOfStatement, 
+                                        tokenStream.Current);
+            }
         }
 
         public void SumExpression() {
@@ -454,6 +467,29 @@ namespace Chimera {
         }
 
         public void RelationalOperator() {
+            switch(CurrentToken) {
+                case TokenCategory.EQUAL:
+                    Expect(TokenCategory.EQUAL);
+                    break;
+                case TokenCategory.INEQUAL:
+                    Expect(TokenCategory.INEQUAL);
+                    break;
+                case TokenCategory.LESSTHAN:
+                    Expect(TokenCategory.LESSTHAN);
+                    break;
+                case TokenCategory.BIGGERTHAN:
+                    Expect(TokenCategory.BIGGERTHAN);
+                    break;
+                case TokenCategory.LESSOREQUAL:
+                    Expect(TokenCategory.LESSOREQUAL);
+                    break;
+                case TokenCategory.BIGGEROREQUAL:
+                    Expect(TokenCategory.BIGGEROREQUAL);
+                    break;
+                default:
+                    throw new SyntaxError(firstOfStatement, 
+                                        tokenStream.Current);
+            }
 
         }
 
@@ -467,7 +503,17 @@ namespace Chimera {
 
 
         public void SumOperator() {
-
+            switch(CurrentToken) {
+                case TokenCategory.ADDITION:
+                    Expect(TokenCategory.ADDITION);
+                    break;
+                case TokenCategory.SUBSTRACT:
+                    Expect(TokenCategory.SUBSTRACT);
+                    break;
+                default:
+                    throw new SyntaxError(firstOfStatement, 
+                                        tokenStream.Current);
+            }
         }
 
         public void UnaryExpression() {
@@ -475,7 +521,20 @@ namespace Chimera {
         }
 
         public void MulOperator() {
-
+            switch(CurrentToken) {
+                case TokenCategory.MULTIPLICATION:
+                    Expect(TokenCategory.MULTIPLICATION);
+                    break;
+                case TokenCategory.DIV:
+                    Expect(TokenCategory.DIV);
+                    break;
+                case TokenCategory.REM:
+                    Expect(TokenCategory.REM);
+                    break;
+                default:
+                    throw new SyntaxError(firstOfStatement, 
+                                        tokenStream.Current);
+            }
         }
         public void SimpleExpression() {
             switch (CurrentToken) { 
