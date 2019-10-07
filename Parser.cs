@@ -544,14 +544,22 @@ namespace Chimera {
                 break;
             default:
                 throw new SyntaxError(firstOfSimpleExpression, 
-                                      tokenStream.Current);
+                    tokenStream.Current);
             }
+<<<<<<< HEAD
 
             if (CurrentToken = TokenCategory.INITBRACKET)
+=======
+            if (CurrentToken == TokenCategory.INITBRACKET)
+>>>>>>> 20d8ca772040af63f787ef44ef401d54daa5e786
             {
                 Expression();
                 Expect(TokenCategory.CLOSINGBRACKET);
             }
+<<<<<<< HEAD
+=======
+                
+>>>>>>> 20d8ca772040af63f787ef44ef401d54daa5e786
         }
 
         public void Call(){
