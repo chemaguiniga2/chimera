@@ -541,15 +541,16 @@ namespace Chimera {
                     Call();
                 }
                 break;
-                if (CurrentToken = TokenCategory.INITBRACKET)
-                {
-                    Expression();
-                    Expect(TokenCategory.CLOSINGBRACKET);
-                }
-                default:
+            default:
                 throw new SyntaxError(firstOfSimpleExpression, 
-                                      tokenStream.Current);
+                    tokenStream.Current);
             }
+            if (CurrentToken == TokenCategory.INITBRACKET)
+            {
+                Expression();
+                Expect(TokenCategory.CLOSINGBRACKET);
+            }
+                
         }
 
         public void Call(){
