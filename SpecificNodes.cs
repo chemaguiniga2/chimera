@@ -12,5 +12,6 @@ José Rodrigo Narváez Berlanga   A01377566
      class StatementList: Node{}
      class ProcedureDeclarationList: Node{}
      class ProcedureDeclaration: Node{}
+     class ConstantDeclarationList: Node{}
 
  }

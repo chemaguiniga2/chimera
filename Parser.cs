@@ -91,16 +91,18 @@ namespace Chimera {
         public Node Program() {
             var statList = new StatementList();
             var procDecList = new ProcedureDeclarationList();
+            var consDecList = new ConstantDeclarationList();
+            var varDecList = new VariableDeclarationList();
 
             if (CurrentToken == TokenCategory.CONST) {
                 do{
-                    ConstantDeclaration();
+                    consDecList.Add(ConstantDeclaration());
                 }while(CurrentToken == TokenCategory.IDENTIFIER);
             }
 
             if (CurrentToken == TokenCategory.VAR) {
                 do{
-                    VariableDeclaration();
+                    varDecList.Add(VariableDeclaration());
                 }while(CurrentToken == TokenCategory.IDENTIFIER);
             }
                    
@@ -117,8 +119,10 @@ namespace Chimera {
             Expect(TokenCategory.EOF);
 
             return new Program(){
-                statList,
-                procDecList
+                consDecList,
+                varDecList,
+                procDecList,
+                statList
             };
         }
 
