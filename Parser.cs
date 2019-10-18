@@ -122,12 +122,15 @@ namespace Chimera {
             };
         }
 
-        public void ConstantDeclaration() {
+        public Node ConstantDeclaration() {
             Expect(TokenCategory.CONST);
-            Expect(TokenCategory.IDENTIFIER);
+            var idToken = Expect(TokenCategory.IDENTIFIER);
             Expect(TokenCategory.CONSTANTDECLARATION);
-            Literal();
+            var lit = Literal();
             Expect(TokenCategory.ENDLINE);
+            var result = new ConstantDeclaration() { lit };
+            result.AnchorToken = idToken;
+            return result;
         }
 
         public void ParameterDeclaration()
@@ -142,7 +145,7 @@ namespace Chimera {
             Expect(TokenCategory.ENDLINE);
         }
 
-        public void ProcedureDeclaration()
+        public Node ProcedureDeclaration()
         {
             Expect(TokenCategory.PROCEDURE);
             Expect(TokenCategory.IDENTIFIER);
@@ -293,26 +296,20 @@ namespace Chimera {
             SimpleType();
         }
 
-        public void Statement() {
+        public Node Statement() {
             switch (CurrentToken) {
                 case TokenCategory.IDENTIFIER:
-                    AssignmentCallStatement();
-                    break;
+                    return AssignmentCallStatement();
                 case TokenCategory.IF:
-                    If();
-                    break;
+                    return If();
                 case TokenCategory.LOOP:
-                    Loop();
-                    break;
+                    return Loop();
                 case TokenCategory.FOR:
-                    For();
-                    break;
+                    return For();
                 case TokenCategory.RETURN:
-                    Return();
-                    break;
+                    return Return();
                 case TokenCategory.EXIT:
-                    Exit();
-                    break;
+                    return Exit();
                 default:
                     throw new SyntaxError(firstOfStatement, 
                                         tokenStream.Current);

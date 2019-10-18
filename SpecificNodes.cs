@@ -6,6 +6,8 @@ José Rodrigo Narváez Berlanga   A01377566
 
  namespace Chimera{
      class Program: Node{}
+
+     class ConstantDeclaration: Node{}
      class Statement: Node{}
      class StatementList: Node{}
      class ProcedureDeclarationList: Node{}
