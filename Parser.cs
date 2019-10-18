@@ -149,7 +149,7 @@ namespace Chimera {
             Expect(TokenCategory.ENDLINE);
         }
 
-        public Node ProcedureDeclaration()
+        public void ProcedureDeclaration()
         {
             Expect(TokenCategory.PROCEDURE);
             Expect(TokenCategory.IDENTIFIER);
