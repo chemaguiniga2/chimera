@@ -88,10 +88,7 @@ namespace Chimera {
         }
 
         //dache
-        public Node Program() {
-            var statList = new StatementList();
-            var procDecList = new ProcedureDeclarationList();
-
+        public void Program() {
             if (CurrentToken == TokenCategory.CONST) {
                 do{
                     ConstantDeclaration();
@@ -105,21 +102,16 @@ namespace Chimera {
             }
                    
             while(CurrentToken == TokenCategory.PROCEDURE){
-                procDecList.Add(ProcedureDeclaration());
+                ProcedureDeclaration();
             }
 
             Expect(TokenCategory.PROGRAM);
             while(firstOfStatement.Contains(CurrentToken)){
-                statList.Add(Statement());
+                Statement();
             }
             Expect(TokenCategory.END);
             Expect(TokenCategory.ENDLINE); 
             Expect(TokenCategory.EOF);
-
-            return new Program(){
-                statList,
-                procDecList
-            };
         }
 
         public void ConstantDeclaration() {
