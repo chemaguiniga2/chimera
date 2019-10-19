@@ -356,31 +356,36 @@ namespace Chimera {
             Expect(TokenCategory.ENDLINE);
         }
 
-        public void If() {
-            Expect(TokenCategory.IF);
-            Expression();
+        public Node If() {
+            var ifToken = Expect(TokenCategory.IF);
+            var exprList = new ExpressionList();
+            exprList.Add(Expression());
             Expect(TokenCategory.THEN);
+            var stmtList = new StatementList();
             while (firstOfStatement.Contains(CurrentToken)) {
-                Statement();
+                stmtList.Add(Statement());
             }
             if(CurrentToken == TokenCategory.ELSEIF) {
                 while (CurrentToken == TokenCategory.ELSEIF) {
                     Expect(TokenCategory.ELSEIF);
-                    Expression();
+                    exprList.Add(Expression());
                     Expect(TokenCategory.THEN);
                     while (firstOfStatement.Contains(CurrentToken)) {
-                        Statement();
+                        stmtList.Add(Statement());
                     }
                 }
             }
             if(CurrentToken == TokenCategory.ELSE) {
                 Expect(TokenCategory.ELSE);
                 while (firstOfStatement.Contains(CurrentToken)) {
-                    Statement();
+                    stmtList.Add(Statement());
                 }
             }
             Expect(TokenCategory.END);
             Expect(TokenCategory.ENDLINE);
+            var result = new If() { exprList, stmtList };
+            result.AnchorToken = ifToken;
+            return result;
         }
 
         public void Loop() {
