@@ -252,7 +252,7 @@ namespace Chimera {
             }
         }
 
-        public void SimpleLiteral(){
+        public Node SimpleLiteral(){
             switch (CurrentToken) {
                 case TokenCategory.INTEGERLITERAL:
                     return new IntegerLiteral() {
