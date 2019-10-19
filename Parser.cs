@@ -329,15 +329,36 @@ namespace Chimera {
             }            
         }
 
-        public void AssignmentCallStatement(){
-            Expect(TokenCategory.IDENTIFIER);
+        public Node AssignmentCallStatement(){
+            var identif = Expect(TokenCategory.IDENTIFIER);
+            var expressionL = ExpressionList();
             //Console.WriteLine(CurrentToken);
-            if(CurrentToken == TokenCategory.INITBRACKET | CurrentToken == TokenCategory.CONSTANTDECLARATION ){
-                AssignmentStatement();
+            if(CurrentToken == TokenCategory.INITBRACKET || CurrentToken == TokenCategory.CONSTANTDECLARATION ){
+                if(CurrentToken == TokenCategory.INITBRACKET){
+                    Expect(TokenCategory.INITBRACKET);
+                    expressionL.Add(Expression());
+                    Expect(TokenCategory.CLOSINGBRACKET);
+                }
+                Expect(TokenCategory.CONSTANTDECLARATION);
+                expressionL.Add(Expression());
+                Expect(TokenCategory.ENDLINE);
             }
             else if(CurrentToken == TokenCategory.INITPARENTHESIS){
-                CallStatement();
+                Expect(TokenCategory.INITPARENTHESIS);
+                if(firstOfSimpleExpression.Contains(CurrentToken)){
+                    expressionL.Add(Expression());
+                    while(CurrentToken == TokenCategory.COMMA){
+                        Expect(TokenCategory.COMMA);
+                        expressionL.Add(Expression());
+                    }                
+                }
+                Expect(TokenCategory.CLOSINGPARENTHESIS);
+                Expect(TokenCategory.ENDLINE);
             }
+
+            var result = new AssignmentCallStatement( expressionL);
+            result.AnchorToken = identif;
+            return result;
         }
 
         public void AssignmentStatement(){
@@ -365,36 +386,31 @@ namespace Chimera {
             Expect(TokenCategory.ENDLINE);
         }
 
-        public Node If() {
-            var ifToken = Expect(TokenCategory.IF);
-            var exprList = new ExpressionList();
-            exprList.Add(Expression());
+        public void If() {
+            Expect(TokenCategory.IF);
+            Expression();
             Expect(TokenCategory.THEN);
-            var stmtList = new StatementList();
             while (firstOfStatement.Contains(CurrentToken)) {
-                stmtList.Add(Statement());
+                Statement();
             }
             if(CurrentToken == TokenCategory.ELSEIF) {
                 while (CurrentToken == TokenCategory.ELSEIF) {
                     Expect(TokenCategory.ELSEIF);
-                    exprList.Add(Expression());
+                    Expression();
                     Expect(TokenCategory.THEN);
                     while (firstOfStatement.Contains(CurrentToken)) {
-                        stmtList.Add(Statement());
+                        Statement();
                     }
                 }
             }
             if(CurrentToken == TokenCategory.ELSE) {
                 Expect(TokenCategory.ELSE);
                 while (firstOfStatement.Contains(CurrentToken)) {
-                    stmtList.Add(Statement());
+                    Statement();
                 }
             }
             Expect(TokenCategory.END);
             Expect(TokenCategory.ENDLINE);
-            var result = new If() { exprList, stmtList };
-            result.AnchorToken = ifToken;
-            return result;
         }
 
         public void Loop() {
