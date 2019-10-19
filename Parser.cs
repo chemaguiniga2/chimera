@@ -272,6 +272,23 @@ namespace Chimera {
             }
         }
 
+        public Node List()
+        {
+            Expect(TokenCategory.INITLIST);
+            var simpleLitList = SimpleLiteralList();
+            simpleLitList.add(SimpleLiteral());
+            while (CurrentToken == TokenCategory.COMMA)
+            {
+                Expect(TokenCategory.COMMA);
+                simpleLitList.add(SimpleLiteral());
+            }
+            Expect(TokenCategory.CLOSINGLIST);
+            var result = new List() { simpleLitList };
+            result.AnchorToken = procToken;
+            return result;
+        }
+
+
         public void List(){
             Expect(TokenCategory.INITLIST);
             if(CurrentToken == TokenCategory.INTEGERLITERAL | CurrentToken == TokenCategory.STRINGLITERAL | CurrentToken == TokenCategory.BOOLEANITERAL){
