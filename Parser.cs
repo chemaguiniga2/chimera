@@ -155,6 +155,138 @@ namespace Chimera {
             return result;
         }
 
+        public Node Literal()
+        {
+            switch (CurrentToken)
+            {
+                case TokenCategory.INITLIST:
+                    return List();
+                case TokenCategory.INTEGERLITERAL:
+                    return SimpleLiteral();
+                case TokenCategory.STRINGLITERAL:
+                    return SimpleLiteral();
+                case TokenCategory.BOOLEANITERAL:
+                    return SimpleLiteral();
+                default:
+                    throw new SyntaxError(firstOfSimpleExpression,
+                                        tokenStream.Current);
+            }
+        }
+
+        public Node SimpleLiteral()
+        {
+            switch (CurrentToken)
+            {
+                case TokenCategory.INTEGERLITERAL:
+
+                    return List();
+                    return new IntegerLiteral()
+                    {
+                        AnchorToken = Expect(TokenCategory.INTEGERLITERAL)
+                    };
+                case TokenCategory.STRINGLITERAL:
+                    return new StringLiteral()
+                    {
+                        AnchorToken = Expect(TokenCategory.STRINGLITERAL)
+                    };
+                case TokenCategory.BOOLEANITERAL:
+                    return new BooleanLiteral()
+                    {
+                        AnchorToken = Expect(TokenCategory.BOOLEANITERAL)
+                    };
+                default:
+                    throw new SyntaxError(firstOfSimpleExpression,
+                                        tokenStream.Current);
+            }
+        }
+
+        public Node Type()
+        {
+            switch (CurrentToken)
+            {
+                case TokenCategory.LIST:
+                    return ListType();
+                case TokenCategory.STRINGLITERAL:
+                    return SimpleType();
+                case TokenCategory.BOOLEANITERAL:
+                    return SimpleType();
+                case TokenCategory.INTEGERLITERAL:
+                    return SimpleType();
+                default:
+                    throw new SyntaxError(firstOfSimpleExpression,
+                                        tokenStream.Current);
+            }
+        }
+
+        public Node ListType()
+        {
+            Expect(TokenCategory.LIST);
+            Expect(TokenCategory.OF);
+            switch (CurrentToken)
+            {
+                case TokenCategory.STRINGLITERAL:
+                    return SimpleType();
+                case TokenCategory.BOOLEANITERAL:
+                    return SimpleType();
+                case TokenCategory.INTEGERLITERAL:
+                    return SimpleType();
+                default:
+                    throw new SyntaxError(firstOfSimpleExpression,
+                                        tokenStream.Current);
+            }
+        }
+
+        public Node ProcedureDeclaration()
+        {
+            var procToken = Expect(TokenCategory.PROCEDURE);
+            var inden = Expect(TokenCategory.IDENTIFIER);
+            var parDecList = ParameterDeclarationList();
+            var type;
+            var consDecList = ConstantDeclarationList();
+            var varDecList = VariableDeclarationList();
+            var statement = StatementList();
+
+            Expect(TokenCategory.INITPARENTHESIS);
+            while (CurrentToken == TokenCategory.IDENTIFIER)
+            {
+                parDecList.Add(ParameterDeclaration());
+            }
+            Expect(TokenCategory.CLOSINGPARENTHESIS);
+            if (CurrentToken == TokenCategory.DECLARATION)
+            {
+                Expect(TokenCategory.DECLARATION);
+                type = Type();
+            }
+            Expect(TokenCategory.ENDLINE); // hay que agregar esto, dache
+            if (CurrentToken == TokenCategory.CONST)
+            {
+                do
+                {
+                    consDecList.Add(ConstantDeclaration());
+                } while (CurrentToken == TokenCategory.IDENTIFIER);
+            }
+
+            if (CurrentToken == TokenCategory.VAR)
+            {
+                do
+                {
+                    varDecList.Add(VariableDeclaration());
+                } while (CurrentToken == TokenCategory.IDENTIFIER);
+            }
+
+            Expect(TokenCategory.BEGIN);
+            while (firstOfStatement.Contains(CurrentToken))
+            {
+                statement.Add(Statement());
+            }
+            Expect(TokenCategory.END);
+            Expect(TokenCategory.ENDLINE);
+            var result = new ProcedureDeclaration() { inden, parDecList, type, consDecList, varDecList, statement };
+            result.AnchorToken = procToken;
+            return result;
+        }
+
+
         public Node ParameterDeclaration()
         {
             Expect(TokenCategory.PARAM);
@@ -186,91 +318,8 @@ namespace Chimera {
             Expect(TokenCategory.ENDLINE);
         }
 
-        public Node ProcedureDeclaration()
-        {
-            var procToken = Expect(TokenCategory.PROCEDURE);
-            var inden = Expect(TokenCategory.IDENTIFIER);
-            var parDecList = ParameterDeclarationList();
-            var type;
-            var consDecList = ConstantDeclarationList();
-            var varDecList = VariableDeclarationList();
-            var statement = StatementList();
-
-            Expect(TokenCategory.INITPARENTHESIS);
-            while(CurrentToken == TokenCategory.IDENTIFIER)
-            {
-                parDecList.Add(ParameterDeclaration());
-            }
-            Expect(TokenCategory.CLOSINGPARENTHESIS);
-            if(CurrentToken == TokenCategory.DECLARATION)
-            {
-                Expect(TokenCategory.DECLARATION);
-                type = Type();
-            }
-            Expect(TokenCategory.ENDLINE); // hay que agregar esto, dache
-            if (CurrentToken == TokenCategory.CONST)
-            {
-                do
-                {
-                    consDecList.Add(ConstantDeclaration());
-                } while (CurrentToken == TokenCategory.IDENTIFIER);
-            }
-
-            if (CurrentToken == TokenCategory.VAR)
-            {
-                do
-                {
-                    varDecList.Add(VariableDeclaration());
-                } while (CurrentToken == TokenCategory.IDENTIFIER);
-            }
-
-            Expect(TokenCategory.BEGIN);
-            while (firstOfStatement.Contains(CurrentToken))
-            {
-                statement.Add(Statement());
-            }
-            Expect(TokenCategory.END);
-            Expect(TokenCategory.ENDLINE);
-            var result = new ProcedureDeclaration(){inden, parDecList, type, consDecList, varDecList, statement};
-            result.AnchorToken = procToken;
-            return result;
-        }
-
-        public Node Literal(){
-            switch(CurrentToken){
-                case TokenCategory.INITLIST:
-                    return List();
-                case TokenCategory.INTEGERLITERAL:
-                    return SimpleLiteral();
-                case TokenCategory.STRINGLITERAL:
-                    return SimpleLiteral();
-                case TokenCategory.BOOLEANITERAL:
-                    return SimpleLiteral();
-                default:
-                    throw new SyntaxError(firstOfSimpleExpression, 
-                                        tokenStream.Current);            
-            }
-        }
-
-        public Node SimpleLiteral(){
-            switch (CurrentToken) {
-                case TokenCategory.INTEGERLITERAL:
-                    return new IntegerLiteral() {
-                        AnchorToken = Expect(TokenCategory.INTEGERLITERAL)
-                    };
-                case TokenCategory.STRINGLITERAL:
-                    return new StringLiteral() {
-                        AnchorToken = Expect(TokenCategory.STRINGLITERAL)
-                    };
-                case TokenCategory.BOOLEANITERAL:
-                    return new BooleanLiteral() {
-                        AnchorToken = Expect(TokenCategory.BOOLEANITERAL)
-                    };
-                default:
-                    throw new SyntaxError(firstOfSimpleExpression, 
-                                        tokenStream.Current);
-            }
-        }
+        
+        
 
         public Node List()
         {
