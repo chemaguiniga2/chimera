@@ -388,43 +388,55 @@ namespace Chimera {
             return result;
         }
 
-        public void Loop() {
-            Expect(TokenCategory.LOOP);
+        public Node Loop() {
+            var idToken = Expect(TokenCategory.LOOP);
+            var stmtList = new StatementList();
             while(firstOfStatement.Contains(CurrentToken)) {
-                Statement();
+                stmtList.Add(Statement());
             }
             Expect(TokenCategory.END);
             Expect(TokenCategory.ENDLINE);
+            var result = new LoaderOptimization() { stmtList };
+            result.AnchorToken = idToken;
+            return result;
         }
-        public void For()
+        public Node For()
         {
-            Expect(TokenCategory.FOR);
-            Expect(TokenCategory.IDENTIFIER);
+            var idToken = Expect(TokenCategory.FOR);
+            var identifier = Expect(TokenCategory.IDENTIFIER);
             Expect(TokenCategory.IN);
-            Expression();
+            var expr = Expression();
             Expect(TokenCategory.DO);
+            var stmtList =  new StatementList();
             while (firstOfStatement.Contains(CurrentToken))
             {
-                Statement();
+                stmtList.Add(Statement());
             }
             Expect(TokenCategory.END);
             Expect(TokenCategory.ENDLINE);
+            var result = new FormatException() { identifier, expr, stmtList };
+            result.AnchorToken = idToken;
+            return result;
         }
 
-        public void Return()
+        public Node Return()
         {
-            Expect(TokenCategory.RETURN);
+            var result = new Return() {};
+            result.AnchorToken = Expect(TokenCategory.RETURN);
             if (firstOfSimpleExpression.Contains(CurrentToken))
             {
-                Expression();
+                result.Add(Expression());
             }
             Expect(TokenCategory.ENDLINE);
+            return result;
         }
 
-        public void Exit()
+        public Node Exit()
         {
-            Expect(TokenCategory.EXIT);
+            var result = new Exit() {};
+            result.AnchorToken = Expect(TokenCategory.EXIT);
             Expect(TokenCategory.ENDLINE);
+            return result;
         }
 
         public void Expression(){
