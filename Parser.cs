@@ -217,20 +217,16 @@ namespace Chimera {
             return result;
         }
 
-        public void Literal(){
+        public Node Literal(){
             switch(CurrentToken){
                 case TokenCategory.INITLIST:
-                    List();
-                    break;
+                    return List();
                 case TokenCategory.INTEGERLITERAL:
-                    SimpleLiteral();
-                    break;
+                    return SimpleLiteral();
                 case TokenCategory.STRINGLITERAL:
-                    SimpleLiteral();
-                    break;
+                    return SimpleLiteral();
                 case TokenCategory.BOOLEANITERAL:
-                    SimpleLiteral();
-                    break;
+                    return SimpleLiteral();
                 default:
                     throw new SyntaxError(firstOfSimpleExpression, 
                                         tokenStream.Current);            
@@ -466,8 +462,8 @@ namespace Chimera {
             return result;
         }
 
-        public void Expression(){
-            LogicExpression();
+        public Node Expression(){
+            return LogicExpression();
         }
 
         public void LogicExpression(){
