@@ -15,6 +15,9 @@ José Rodrigo Narváez Berlanga   A01377566
      class ConstantDeclarationList: Node{}
      class ParameterDeclarationList: Node{}
      class ExpressionList: Node{}
-     
+     class IntegerLiteral: Node{}
+     class StringLiteral: Node{}
+     class BooleanLiteral: Node{}
+
 
  }

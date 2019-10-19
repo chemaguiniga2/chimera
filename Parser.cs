@@ -236,14 +236,17 @@ namespace Chimera {
         public void SimpleLiteral(){
             switch (CurrentToken) {
                 case TokenCategory.INTEGERLITERAL:
-                    Expect(TokenCategory.INTEGERLITERAL);
-                    break;
+                    return new IntegerLiteral() {
+                        AnchorToken = Expect(TokenCategory.INTEGERLITERAL)
+                    };
                 case TokenCategory.STRINGLITERAL:
-                    Expect(TokenCategory.STRINGLITERAL);
-                    break;
+                    return new StringLiteral() {
+                        AnchorToken = Expect(TokenCategory.STRINGLITERAL)
+                    };
                 case TokenCategory.BOOLEANITERAL:
-                    Expect(TokenCategory.BOOLEANITERAL);
-                    break;
+                    return new BooleanLiteral() {
+                        AnchorToken = Expect(TokenCategory.BOOLEANITERAL)
+                    };
                 default:
                     throw new SyntaxError(firstOfSimpleExpression, 
                                         tokenStream.Current);
