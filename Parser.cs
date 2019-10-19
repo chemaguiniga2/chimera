@@ -137,6 +137,24 @@ namespace Chimera {
             return result;
         }
 
+        public Node VariableDeclaration()
+        {
+            Expect(TokenCategory.VAR);
+            var idToken = Expect(TokenCategory.IDENTIFIER);
+            var idList = IdentifierList();
+            while (CurrentToken == TokenCategory.COMMA)
+            {
+                idList.Add(TokenCategory.IDENTIFIER);
+            }
+
+            Expect(TokenCategory.CONSTANT);
+            var type = Type();
+            Expect(TokenCategory.ENDLINE);
+            var result = new VariableDeclaration() { idToken, idList, type };
+            result.AnchorToken = idToken;
+            return result;
+        }
+
         public void ParameterDeclaration()
         {
             Expect(TokenCategory.IDENTIFIER);
@@ -149,27 +167,33 @@ namespace Chimera {
             Expect(TokenCategory.ENDLINE);
         }
 
-        public void ProcedureDeclaration()
+        public Node ProcedureDeclaration()
         {
-            Expect(TokenCategory.PROCEDURE);
-            Expect(TokenCategory.IDENTIFIER);
+            var procToken = Expect(TokenCategory.PROCEDURE);
+            var inden = Expect(TokenCategory.IDENTIFIER);
+            var parDecList = ParameterDeclarationList();
+            var type;
+            var consDecList = ConstantDeclarationList();
+            var varDecList = VariableDeclarationList();
+            var statement = StatementList();
+
             Expect(TokenCategory.INITPARENTHESIS);
             while(CurrentToken == TokenCategory.IDENTIFIER)
             {
-                ParameterDeclaration();
+                parDecList.Add(ParameterDeclaration());
             }
             Expect(TokenCategory.CLOSINGPARENTHESIS);
             if(CurrentToken == TokenCategory.DECLARATION)
             {
                 Expect(TokenCategory.DECLARATION);
-                Type();
+                type = Type();
             }
             Expect(TokenCategory.ENDLINE); // hay que agregar esto, dache
             if (CurrentToken == TokenCategory.CONST)
             {
                 do
                 {
-                    ConstantDeclaration();
+                    consDecList.Add(ConstantDeclaration());
                 } while (CurrentToken == TokenCategory.IDENTIFIER);
             }
 
@@ -177,17 +201,20 @@ namespace Chimera {
             {
                 do
                 {
-                    VariableDeclaration();
+                    varDecList.Add(VariableDeclaration());
                 } while (CurrentToken == TokenCategory.IDENTIFIER);
             }
 
             Expect(TokenCategory.BEGIN);
             while (firstOfStatement.Contains(CurrentToken))
             {
-                Statement();
+                statement.Add(Statement());
             }
             Expect(TokenCategory.END);
             Expect(TokenCategory.ENDLINE);
+            var result = new ProcedureDeclaration(){inden, parDecList, type, consDecList, varDecList, statement};
+            result.AnchorToken = procToken;
+            return result;
         }
 
         public void Literal(){
