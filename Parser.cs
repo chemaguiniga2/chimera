@@ -155,6 +155,25 @@ namespace Chimera {
             return result;
         }
 
+        public Node ParameterDeclaration()
+        {
+            Expect(TokenCategory.PARAM);
+            var paramToken = Expect(TokenCategory.IDENTIFIER);
+            var paramList = IdentifierList();
+            while (CurrentToken == TokenCategory.COMMA)
+            {
+                paramList.Add(TokenCategory.IDENTIFIER);
+            }
+
+            Expect(TokenCategory.CONSTANT);
+            var type = Type();
+            Expect(TokenCategory.ENDLINE);
+            var result = new ParameterDeclaration() { paramToken, paramList, type };
+            result.AnchorToken = idToken;
+            return result;
+        }
+
+
         public void ParameterDeclaration()
         {
             Expect(TokenCategory.IDENTIFIER);
