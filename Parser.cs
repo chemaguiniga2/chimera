@@ -252,24 +252,9 @@ namespace Chimera {
         {
             Expect(TokenCategory.LIST);
             Expect(TokenCategory.OF);
-            switch (CurrentToken)
-            {
-                case TokenCategory.STRINGLITERAL:
-                    return new Type(){
+            return new SimpleType(){
                         AnchorToken = SimpleType()
                     };
-                case TokenCategory.BOOLEANITERAL:
-                    return new Type(){
-                        AnchorToken = SimpleType()
-                    };
-                case TokenCategory.INTEGERLITERAL:
-                    return new Type(){
-                        AnchorToken = SimpleType()
-                    };
-                default:
-                    throw new SyntaxError(firstOfSimpleExpression,
-                                        tokenStream.Current);
-            }
         }
 
         public Node ProcedureDeclaration()
@@ -369,11 +354,14 @@ namespace Chimera {
         {
             var initList = Expect(TokenCategory.INITLIST);
             var simpleLitList = new SimpleLiteralList();
-            var litToken = SimpleLiteral(); 
-            while (CurrentToken == TokenCategory.COMMA)
-            {
-                Expect(TokenCategory.COMMA);
-                simpleLitList.Add(SimpleLiteral());
+            var litToken = new SimpleLiteral(); 
+            if(CurrentToken == TokenCategory.INTEGERLITERAL | CurrentToken == TokenCategory.STRINGLITERAL | CurrentToken == TokenCategory.BOOLEANITERAL){
+                litToken.Add(SimpleLiteral()); 
+                while (CurrentToken == TokenCategory.COMMA)
+                {
+                    Expect(TokenCategory.COMMA);
+                    simpleLitList.Add(SimpleLiteral());
+                }
             }
             Expect(TokenCategory.CLOSINGLIST);
             var result = new List() { litToken, simpleLitList };
