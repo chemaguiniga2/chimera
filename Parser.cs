@@ -141,7 +141,7 @@ namespace Chimera {
         {
             Expect(TokenCategory.VAR);
             var idToken = Expect(TokenCategory.IDENTIFIER);
-            var idList = IdentifierList();
+            var idList = new IdentifierList();
             while (CurrentToken == TokenCategory.COMMA)
             {
                 idList.Add(TokenCategory.IDENTIFIER);
@@ -239,12 +239,14 @@ namespace Chimera {
         public Node ProcedureDeclaration()
         {
             var procToken = Expect(TokenCategory.PROCEDURE);
-            var inden = Expect(TokenCategory.IDENTIFIER);
-            var parDecList = ParameterDeclarationList();
-            var type;
-            var consDecList = ConstantDeclarationList();
-            var varDecList = VariableDeclarationList();
-            var statement = StatementList();
+            var inden = new Identifier(){
+                AnchorToken = Expect(TokenCategory.IDENTIFIER)
+                } ;
+            var parDecList = new ParameterDeclarationList();
+            var type = new Type();
+            var consDecList = new ConstantDeclarationList();
+            var varDecList = new VariableDeclarationList();
+            var statement = new StatementList();
 
             Expect(TokenCategory.INITPARENTHESIS);
             while (CurrentToken == TokenCategory.IDENTIFIER)
@@ -255,7 +257,7 @@ namespace Chimera {
             if (CurrentToken == TokenCategory.DECLARATION)
             {
                 Expect(TokenCategory.DECLARATION);
-                type = Type();
+                type.Add(Type());
             }
             Expect(TokenCategory.ENDLINE); // hay que agregar esto, dache
             if (CurrentToken == TokenCategory.CONST)
@@ -310,7 +312,7 @@ namespace Chimera {
         public Node List()
         {
             Expect(TokenCategory.INITLIST);
-            var simpleLitList = SimpleLiteralList();
+            var simpleLitList = new SimpleLiteralList();
             simpleLitList.add(SimpleLiteral());
             while (CurrentToken == TokenCategory.COMMA)
             {
@@ -360,12 +362,13 @@ namespace Chimera {
 
         public Node AssignmentCallStatement(){
             var identif = Expect(TokenCategory.IDENTIFIER);
-            var expressionL = ExpressionList();
+            var expression = new Expression();
+            var expressionL = new ExpressionList();
             //Console.WriteLine(CurrentToken);
             if(CurrentToken == TokenCategory.INITBRACKET || CurrentToken == TokenCategory.CONSTANTDECLARATION ){
                 if(CurrentToken == TokenCategory.INITBRACKET){
                     Expect(TokenCategory.INITBRACKET);
-                    expressionL.Add(Expression());
+                    expression.Add(Expression());
                     Expect(TokenCategory.CLOSINGBRACKET);
                 }
                 Expect(TokenCategory.CONSTANTDECLARATION);
@@ -375,7 +378,7 @@ namespace Chimera {
             else if(CurrentToken == TokenCategory.INITPARENTHESIS){
                 Expect(TokenCategory.INITPARENTHESIS);
                 if(firstOfSimpleExpression.Contains(CurrentToken)){
-                    expressionL.Add(Expression());
+                    expression.Add(Expression());
                     while(CurrentToken == TokenCategory.COMMA){
                         Expect(TokenCategory.COMMA);
                         expressionL.Add(Expression());
@@ -385,7 +388,7 @@ namespace Chimera {
                 Expect(TokenCategory.ENDLINE);
             }
 
-            var result = new AssignmentCallStatement( expressionL);
+            var result = new AssignmentCallStatement(){expression, expressionL};
             result.AnchorToken = identif;
             return result;
         }
