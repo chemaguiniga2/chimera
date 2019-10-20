@@ -36,6 +36,11 @@ José Rodrigo Narváez Berlanga   A01377566
      class SubstractOperator: Node{}
 
      class VariableDeclarationList: Node{}
+     class AssignmentCallStatement: Node{}
+     class Expression: Node{}
+     class Type: Node{}
+     class Identifier: Node{}
+     class IdentifierList: Node{}
 
      class Exit: Node{}
      class Return: Node{}
