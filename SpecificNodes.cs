@@ -35,6 +35,8 @@ José Rodrigo Narváez Berlanga   A01377566
      class AdditionOperator: Node{}
      class SubstractOperator: Node{}
 
+     class VariableDeclarationList: Node{}
+
 
 
  }

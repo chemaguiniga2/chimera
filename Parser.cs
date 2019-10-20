@@ -453,6 +453,7 @@ namespace Chimera {
             var result = new FormatException() { identifier, expr, stmtList };
             result.AnchorToken = idToken;
             return result;
+            //Si nos estamos refiriendo a FormatException?
         }
 
         public Node Return()
@@ -634,24 +635,20 @@ namespace Chimera {
                 Expect(TokenCategory.CLOSINGPARENTHESIS);
                 return result;
             case TokenCategory.INTEGERLITERAL:
-                var result = SimpleLiteral();
-                return result;
+                return SimpleLiteral();
             case TokenCategory.STRINGLITERAL:
-                var result = SimpleLiteral();
-                return result;
+                return SimpleLiteral();
             case TokenCategory.BOOLEANITERAL:
-                var result = SimpleLiteral();
-                return result;
+                return SimpleLiteral();
             case TokenCategory.INITLIST:
-                var result = List();
-                return result;
+                return List();
             case TokenCategory.IDENTIFIER:
-                Node result = null;
-                result.AnchorToken = Expect(TokenCategory.IDENTIFIER);
+                Node resultNode = null;
+                resultNode.AnchorToken = Expect(TokenCategory.IDENTIFIER);
                 if(CurrentToken == TokenCategory.INITPARENTHESIS){
-                    result.Add(Call());
+                    resultNode.Add(Call());
                 }
-                break;
+                return resultNode;
             default:
                 throw new SyntaxError(firstOfSimpleExpression, 
                     tokenStream.Current);
