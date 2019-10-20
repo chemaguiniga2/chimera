@@ -602,51 +602,53 @@ namespace Chimera {
         public Node MulOperator() {
             switch(CurrentToken) {
                 case TokenCategory.MULTIPLICATION:
-                    return new Mul(){
-                        AnchorToken = Expect(TokenCategory.MULTIPLICATION);
-                    } ;
+                    return new MultiplicationOperator() {
+                        AnchorToken = Expect(TokenCategory.MULTIPLICATION)
+                    };
                 case TokenCategory.DIV:
-                    return new Div(){
-                        AnchorToken = Expect(TokenCategory.DIV);
+                    return new DivOperator() {
+                        AnchorToken = Expect(TokenCategory.DIV)
                     };
                 case TokenCategory.REM:
-                    return new Rem(){
-                        AnchorToken = Expect(TokenCategory.REM);
+                    return new RemOperator() {
+                        AnchorToken = Expect(TokenCategory.REM)
                     };
                 default:
                     throw new SyntaxError(firstOfStatement, 
                                         tokenStream.Current);
             }
         }
-        public void SimpleExpression() {
+        public Node SimpleExpression() {
             switch (CurrentToken) { 
             case TokenCategory.INITPARENTHESIS:
                 Expect(TokenCategory.INITPARENTHESIS);
-                Expression();
+                var result = Expression();
                 Expect(TokenCategory.CLOSINGPARENTHESIS);
-                break;
+                return result;
             case TokenCategory.INTEGERLITERAL:
-                SimpleLiteral();
-                break;
+                var result = SimpleLiteral();
+                return result;
             case TokenCategory.STRINGLITERAL:
-                SimpleLiteral();
-                break;
+                var result = SimpleLiteral();
+                return result;
             case TokenCategory.BOOLEANITERAL:
-                SimpleLiteral();
-                break;
+                var result = SimpleLiteral();
+                return result;
             case TokenCategory.INITLIST:
-                List();
-                break;
+                var result = List();
+                return result;
             case TokenCategory.IDENTIFIER:
-                Expect(TokenCategory.IDENTIFIER);
+                Node result = null;
+                result.AnchorToken = Expect(TokenCategory.IDENTIFIER);
                 if(CurrentToken == TokenCategory.INITPARENTHESIS){
-                    Call();
+                    result.Add(Call());
                 }
                 break;
             default:
                 throw new SyntaxError(firstOfSimpleExpression, 
                     tokenStream.Current);
             }
+            //Porque este if no entra dentro del switch
             if (CurrentToken == TokenCategory.INITBRACKET)
             {
                 Expect(TokenCategory.INITBRACKET);
@@ -658,14 +660,16 @@ namespace Chimera {
         public void Call(){
             Expect(TokenCategory.INITPARENTHESIS);
             //if(CurrentToken == TokenCategory.NOT | CurrentToken == TokenCategory.SUBSTRACT | CurrentToken == TokenCategory.INTEGERLITERAL | CurrentToken == TokenCategory.STRINGLITERAL | CurrentToken == TokenCategory.BOOLEANITERAL | CurrentToken == TokenCategory.IDENTIFIER){
+            Node result = null;
             if(firstOfSimpleExpression.Contains(CurrentToken)){ 
-                Expression();
+                result.Add(Expression());
                 while(CurrentToken == TokenCategory.COMMA){
                     Expect(TokenCategory.COMMA);
-                    Expression();
+                    result.Add(Expression());
                 }                
             }
-            Expect(TokenCategory.CLOSINGPARENTHESIS);            
+            Expect(TokenCategory.CLOSINGPARENTHESIS); 
+            return result;           
         }
 
 

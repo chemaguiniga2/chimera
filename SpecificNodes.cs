@@ -28,12 +28,12 @@ José Rodrigo Narváez Berlanga   A01377566
      class BiggerThanOperator: Node{}
      class LessOrEqualOperator: Node{}
      class BiggerOrEqualOperator: Node{}
-     class Mul: Node{}
-     class Div: Node{}
-     class Rem: Node{}
      class Addition: Node{}
-     class Substract: Node{}
-     
+     class Substract: Node{}     
+     class MultiplicationOperator: Node{}
+     class DivOperator: Node{}
+     class RemOperator: Node{}
+     class SimpleExpression: Node{} 
 
 
  }
