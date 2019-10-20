@@ -1,7 +1,8 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\examples"
   ],
-  "SelectedNode": "\\TokenCategory.cs",
+  "SelectedNode": "\\Parser.cs",
   "PreviewInSolutionExplorer": false
 }

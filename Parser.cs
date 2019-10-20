@@ -140,18 +140,20 @@ namespace Chimera {
         public Node VariableDeclaration()
         {
             Expect(TokenCategory.VAR);
-            var idToken = Expect(TokenCategory.IDENTIFIER);
             var idList = new IdentifierList();
+            var idFirst = Expect(TokenCategory.IDENTIFIER);
             while (CurrentToken == TokenCategory.COMMA)
             {
-                idList.Add(TokenCategory.IDENTIFIER);
+                idList.Add(new Identifier()
+                {
+                    AnchorToken = Expect(TokenCategory.IDENTIFIER)
+                });
             }
-
-            Expect(TokenCategory.CONSTANT);
+            Expect(TokenCategory.DECLARATION);
             var type = Type();
             Expect(TokenCategory.ENDLINE);
             var result = new VariableDeclaration() {idList, type };
-            result.AnchorToken = idToken;
+            result.AnchorToken = idFirst;
             return result;
         }
 
@@ -179,7 +181,7 @@ namespace Chimera {
             {
                 case TokenCategory.INTEGERLITERAL:
 
-                    return List();
+                    //return List();
                     return new IntegerLiteral()
                     {
                         AnchorToken = Expect(TokenCategory.INTEGERLITERAL)
@@ -301,6 +303,27 @@ namespace Chimera {
         }
 
 
+        /* PARTIAL SOLUTION
+        public Node ParameterDeclaration()
+        {
+            var paramToken = Expect(TokenCategory.IDENTIFIER);
+            var paramList = new IdentifierList();
+            while (CurrentToken == TokenCategory.COMMA)
+            {
+                paramList.Add(new Identifier()
+                {
+                    AnchorToken = Expect(TokenCategory.IDENTIFIER)
+                });
+            }
+            Expect(TokenCategory.DECLARATION);
+            var type = Type();
+            Expect(TokenCategory.ENDLINE);
+            var result = new ParameterDeclaration() { paramList, type};
+            result.AnchorToken = paramToken;
+            return result;
+
+        }*/
+
         public Node ParameterDeclaration()
         {
             Expect(TokenCategory.PARAM);
@@ -318,22 +341,20 @@ namespace Chimera {
             result.AnchorToken = idToken;
             return result;
         }
-        
-        
 
         public Node List()
         {
-            Expect(TokenCategory.INITLIST);
+            var initList = Expect(TokenCategory.INITLIST);
             var simpleLitList = new SimpleLiteralList();
-            simpleLitList.add(SimpleLiteral());
+            var litToken = SimpleLiteral(); 
             while (CurrentToken == TokenCategory.COMMA)
             {
                 Expect(TokenCategory.COMMA);
-                simpleLitList.add(SimpleLiteral());
+                simpleLitList.Add(SimpleLiteral());
             }
             Expect(TokenCategory.CLOSINGLIST);
-            var result = new List() { simpleLitList };
-            result.AnchorToken = procToken;
+            var result = new List() { litToken, simpleLitList };
+            result.AnchorToken = initList;
             return result;
         }
 
