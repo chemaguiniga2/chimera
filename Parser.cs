@@ -490,11 +490,13 @@ namespace Chimera {
             return logExpr1;
         }
 
-        public void RelationalExpression(){
-            SumExpression();
+        public Node RelationalExpression(){
+            var relExpr = SumExpression();
             while(CurrentToken == TokenCategory.EQUAL | CurrentToken == TokenCategory.INEQUAL | CurrentToken == TokenCategory.LESSOREQUAL | CurrentToken == TokenCategory.BIGGEROREQUAL | CurrentToken == TokenCategory.LESSTHAN | CurrentToken == TokenCategory.BIGGERTHAN) {
-                RelationalOperator();
-                SumExpression();
+                var relExpr2 = RelationalOperator();
+                relExpr2.Add(relExpr);
+                relExpr2.Add(SumExpression());
+                relExpr = relExpr2;
             }
         }
 
