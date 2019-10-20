@@ -525,7 +525,7 @@ namespace Chimera {
 
         }
 
-        public void RelationalOperator() {
+        public Node RelationalOperator() {
             switch(CurrentToken) {
                 case TokenCategory.EQUAL:
                     return new EqualOperator() {
@@ -599,7 +599,7 @@ namespace Chimera {
             }
         }
 
-        public Nodo MulOperator() {
+        public Node MulOperator() {
             switch(CurrentToken) {
                 case TokenCategory.MULTIPLICATION:
                     return new Mul(){
