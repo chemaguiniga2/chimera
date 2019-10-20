@@ -139,23 +139,44 @@ namespace Chimera {
 
         public Node VariableDeclaration()
         {
-            Expect(TokenCategory.VAR);
-            var idList = new IdentifierList();
-            var idFirst = Expect(TokenCategory.IDENTIFIER);
-            while (CurrentToken == TokenCategory.COMMA)
+
+            var varNode = new VariableDeclarationList();
+            varNode.AnchorToken = Expect(TokenCategory.VAR);
+
+            while (CurrentToken == TokenCategory.IDENTIFIER)
             {
-                Expect(TokenCategory.COMMA);
-                idList.Add(new Identifier()
-                {
+                var id1Node = new Identifier(){
                     AnchorToken = Expect(TokenCategory.IDENTIFIER)
-                });
+                };
+                while (CurrentToken == TokenCategory.COMMA)
+                {                    
+                    var commaNode = new Identifier(){
+                        AnchorToken = Expect(TokenCategory.COMMA)
+                    };
+                    var id2Node = new Identifier(){
+                        AnchorToken = Expect(TokenCategory.IDENTIFIER)
+                    };
+
+                    commaNode.Add(id1Node);
+                    commaNode.Add(id2Node);
+
+                    id1Node = commaNode;
+
+                }
+                var declNode = new Identifier(){
+                    AnchorToken = Expect(TokenCategory.DECLARATION) //declaration
+                };
+                declNode.Add(id1Node);
+                declNode.Add(Type());
+
+                Expect(TokenCategory.ENDLINE); //end of line
+                varNode.Add(declNode);
+
             }
-            Expect(TokenCategory.DECLARATION);
-            var type = Type();
-            Expect(TokenCategory.ENDLINE);
-            var result = new VariableDeclaration() {idList, type };
-            result.AnchorToken = idFirst;
-            return result;
+            
+            return varNode;
+
+           
         }
 
         public Node Literal()

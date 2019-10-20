@@ -40,6 +40,7 @@ José Rodrigo Narváez Berlanga   A01377566
      class AssignmentCallStatement: Node{}
      class Expression: Node{}
      class Type: Node{}
+     class TypeList: Node{}
      class Identifier: Node{}
      class IdentifierList: Node{}
 
