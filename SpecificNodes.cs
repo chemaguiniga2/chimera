@@ -32,6 +32,9 @@ José Rodrigo Narváez Berlanga   A01377566
      class DivOperator: Node{}
      class RemOperator: Node{}
      class SimpleExpression: Node{} 
+     class AdditionOperator: Node{}
+     class SubstractOperator: Node{}
+
 
 
  }

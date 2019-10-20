@@ -567,21 +567,23 @@ namespace Chimera {
         }
 
 
-        public void SumOperator() {
+        public Node SumOperator() {
             switch(CurrentToken) {
                 case TokenCategory.ADDITION:
-                    Expect(TokenCategory.ADDITION);
-                    break;
+                    return new AdditionOperator() {
+                        AnchorToken = Expect(TokenCategory.ADDITION)
+                    };
                 case TokenCategory.SUBSTRACT:
-                    Expect(TokenCategory.SUBSTRACT);
-                    break;
+                    return new SubstractOperator() {
+                        AnchorToken = Expect(TokenCategory.SUBSTRACT)
+                    };
                 default:
                     throw new SyntaxError(firstOfStatement, 
                                         tokenStream.Current);
             }
         }
 
-        public void UnaryExpression() {
+        public Node UnaryExpression() {
             switch(CurrentToken) {
                 case TokenCategory.NOT:
                     Expect(TokenCategory.NOT);
@@ -655,7 +657,7 @@ namespace Chimera {
             }
         }
 
-        public void Call(){
+        public Node Call(){
             Expect(TokenCategory.INITPARENTHESIS);
             //if(CurrentToken == TokenCategory.NOT | CurrentToken == TokenCategory.SUBSTRACT | CurrentToken == TokenCategory.INTEGERLITERAL | CurrentToken == TokenCategory.STRINGLITERAL | CurrentToken == TokenCategory.BOOLEANITERAL | CurrentToken == TokenCategory.IDENTIFIER){
             Node result = null;
