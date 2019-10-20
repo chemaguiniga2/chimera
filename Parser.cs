@@ -587,15 +587,12 @@ namespace Chimera {
             switch(CurrentToken) {
                 case TokenCategory.NOT:
                     Expect(TokenCategory.NOT);
-                    UnaryExpression();
-                    break;
+                    return UnaryExpression();
                 case TokenCategory.SUBSTRACT:
                     Expect(TokenCategory.SUBSTRACT);
-                    UnaryExpression();
-                    break;
+                    return UnaryExpression();
                 default:
-                    SimpleExpression();
-                    break;
+                    return SimpleExpression();
             }
         }
 
