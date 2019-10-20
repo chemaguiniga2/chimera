@@ -14,13 +14,15 @@ namespace Chimera
     public class Driver
     {
 
-        const string VERSION = "0.2";
+        const string VERSION = "0.3";
 
         //-----------------------------------------------------------
         static readonly string[] ReleaseIncludes = {
             "Lexical analysis",
-            "Syntactic analysis"
+            "Syntactic analysis",
+            "AST construction"
         };
+
 
         void PrintAppHeader()
         {
@@ -54,7 +56,7 @@ namespace Chimera
                 Environment.Exit(1);
             }
             //Comentar de aqui hasta
-            try
+            /*try
             {
                 var inputPath = args[0];
                 var input = File.ReadAllText(inputPath);
@@ -76,7 +78,7 @@ namespace Chimera
                 Console.Error.WriteLine(e.Message);
                 Environment.Exit(1);
             }
-            //Aca
+
             try
             {
                 var inputPath = args[0];
@@ -84,6 +86,27 @@ namespace Chimera
                 var parser = new Parser(new Scanner(input).Start().GetEnumerator());
                 parser.Program();
                 Console.WriteLine("Syntax OK.");
+
+            }
+            catch (Exception e)
+            {
+
+                if (e is FileNotFoundException || e is SyntaxError)
+                {
+                    Console.Error.WriteLine(e.Message);
+                    Environment.Exit(1);
+                }
+
+                throw;
+            }*/
+            //Aca
+            try
+            {
+                var inputPath = args[0];
+                var input = File.ReadAllText(inputPath);
+                var parser = new Parser(new Scanner(input).Start().GetEnumerator());
+                var program = parser.Program();
+                Console.Write(program.ToStringTree());
 
             }
             catch (Exception e)
