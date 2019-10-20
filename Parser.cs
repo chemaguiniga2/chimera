@@ -144,6 +144,7 @@ namespace Chimera {
             var idFirst = Expect(TokenCategory.IDENTIFIER);
             while (CurrentToken == TokenCategory.COMMA)
             {
+                Expect(TokenCategory.COMMA);
                 idList.Add(new Identifier()
                 {
                     AnchorToken = Expect(TokenCategory.IDENTIFIER)
@@ -208,15 +209,15 @@ namespace Chimera {
             {
                 case TokenCategory.LIST:
                     return ListType();
-                case TokenCategory.STRINGLITERAL:
+                case TokenCategory.STRING:
                     return new Type(){
                         AnchorToken = SimpleType()
                     };
-                case TokenCategory.BOOLEANITERAL:
+                case TokenCategory.BOOLEAN:
                     return new Type(){
                         AnchorToken = SimpleType()
                     };
-                case TokenCategory.INTEGERLITERAL:
+                case TokenCategory.INTEGER:
                     return new Type(){
                         AnchorToken = SimpleType()
                     };
