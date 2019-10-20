@@ -150,7 +150,7 @@ namespace Chimera {
             Expect(TokenCategory.CONSTANT);
             var type = Type();
             Expect(TokenCategory.ENDLINE);
-            var result = new VariableDeclaration() { idToken, idList, type };
+            var result = new VariableDeclaration() {idList, type };
             result.AnchorToken = idToken;
             return result;
         }
@@ -207,11 +207,17 @@ namespace Chimera {
                 case TokenCategory.LIST:
                     return ListType();
                 case TokenCategory.STRINGLITERAL:
-                    return SimpleType();
+                    return new Type(){
+                        AnchorToken = SimpleType()
+                    };
                 case TokenCategory.BOOLEANITERAL:
-                    return SimpleType();
+                    return new Type(){
+                        AnchorToken = SimpleType()
+                    };
                 case TokenCategory.INTEGERLITERAL:
-                    return SimpleType();
+                    return new Type(){
+                        AnchorToken = SimpleType()
+                    };
                 default:
                     throw new SyntaxError(firstOfSimpleExpression,
                                         tokenStream.Current);
@@ -225,11 +231,17 @@ namespace Chimera {
             switch (CurrentToken)
             {
                 case TokenCategory.STRINGLITERAL:
-                    return SimpleType();
+                    return new Type(){
+                        AnchorToken = SimpleType()
+                    };
                 case TokenCategory.BOOLEANITERAL:
-                    return SimpleType();
+                    return new Type(){
+                        AnchorToken = SimpleType()
+                    };
                 case TokenCategory.INTEGERLITERAL:
-                    return SimpleType();
+                    return new Type(){
+                        AnchorToken = SimpleType()
+                    };
                 default:
                     throw new SyntaxError(firstOfSimpleExpression,
                                         tokenStream.Current);
@@ -442,9 +454,9 @@ namespace Chimera {
         public Node For()
         {
             var idToken = Expect(TokenCategory.FOR);
-            var identifier = new Identifier() {
+            var identifier = new Identifier(){
                 AnchorToken = Expect(TokenCategory.IDENTIFIER)
-            };
+                } ;
             Expect(TokenCategory.IN);
             var expr = Expression();
             Expect(TokenCategory.DO);
