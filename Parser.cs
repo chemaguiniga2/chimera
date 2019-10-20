@@ -567,14 +567,16 @@ namespace Chimera {
         }
 
 
-        public void SumOperator() {
+        public Node SumOperator() {
             switch(CurrentToken) {
                 case TokenCategory.ADDITION:
-                    Expect(TokenCategory.ADDITION);
-                    break;
+                    return new Addition(){
+                        AnchorToken = Expect(TokenCategory.ADDITION);
+                    };
                 case TokenCategory.SUBSTRACT:
-                    Expect(TokenCategory.SUBSTRACT);
-                    break;
+                    return new Substract(){
+                        AnchorToken = Expect(TokenCategory.SUBSTRACT);
+                    };
                 default:
                     throw new SyntaxError(firstOfStatement, 
                                         tokenStream.Current);
@@ -597,17 +599,20 @@ namespace Chimera {
             }
         }
 
-        public void MulOperator() {
+        public Nodo MulOperator() {
             switch(CurrentToken) {
                 case TokenCategory.MULTIPLICATION:
-                    Expect(TokenCategory.MULTIPLICATION);
-                    break;
+                    return new Mul(){
+                        AnchorToken = Expect(TokenCategory.MULTIPLICATION);
+                    } ;
                 case TokenCategory.DIV:
-                    Expect(TokenCategory.DIV);
-                    break;
+                    return new Div(){
+                        AnchorToken = Expect(TokenCategory.DIV);
+                    };
                 case TokenCategory.REM:
-                    Expect(TokenCategory.REM);
-                    break;
+                    return new Rem(){
+                        AnchorToken = Expect(TokenCategory.REM);
+                    };
                 default:
                     throw new SyntaxError(firstOfStatement, 
                                         tokenStream.Current);
