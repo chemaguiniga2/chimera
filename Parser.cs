@@ -498,6 +498,7 @@ namespace Chimera {
                 relExpr2.Add(SumExpression());
                 relExpr = relExpr2;
             }
+            return relExpr;
         }
 
         public Node LogicOperator(){
@@ -520,12 +521,15 @@ namespace Chimera {
             }
         }
 
-        public void SumExpression() {
-            MulExpression();
+        public Node SumExpression() {
+            var sumExpr1 = MulExpression();
             while(CurrentToken == TokenCategory.ADDITION | CurrentToken == TokenCategory.SUBSTRACT) {
-                SumOperator();
-                MulExpression();
+                var sumExpr2 = SumOperator();
+                sumExpr2.Add(sumExpr1);
+                sumExpr2.Add(MulExpression());
+                sumExpr1 = sumExpr2;
             }
+            return sumExpr1;
 
         }
 
@@ -562,12 +566,15 @@ namespace Chimera {
 
         }
 
-        public void MulExpression() {
-            UnaryExpression();
+        public Node MulExpression() {
+            var mulExpr1 = UnaryExpression();
             while(CurrentToken == TokenCategory.MULTIPLICATION | CurrentToken == TokenCategory.DIV | CurrentToken == TokenCategory.REM) {
-                MulOperator();
-                UnaryExpression();
+                var mulExpr2 = MulOperator();
+                mulExpr2.Add(mulExpr1);
+                mulExpr2.Add(UnaryExpression());
+                mulExpr1 = mulExpr2;
             }
+            return mulExpr1;
         }
 
 
