@@ -47,8 +47,6 @@ José Rodrigo Narváez Berlanga   A01377566
      class For: Node{}
      class Loop: Node{}
      class If: Node{}
-     class AssignmentCallStatement: Node{}
-     class Identifier: Node{}
      class List: Node{}
 
 
