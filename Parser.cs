@@ -713,7 +713,7 @@ namespace Chimera {
         public Node Call(){
             Expect(TokenCategory.INITPARENTHESIS);
             //if(CurrentToken == TokenCategory.NOT | CurrentToken == TokenCategory.SUBSTRACT | CurrentToken == TokenCategory.INTEGERLITERAL | CurrentToken == TokenCategory.STRINGLITERAL | CurrentToken == TokenCategory.BOOLEANITERAL | CurrentToken == TokenCategory.IDENTIFIER){
-            Node result = null;
+            var result = new CallNode() {};
             if(firstOfSimpleExpression.Contains(CurrentToken)){ 
                 result.Add(Expression());
                 while(CurrentToken == TokenCategory.COMMA){

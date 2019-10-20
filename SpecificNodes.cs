@@ -51,6 +51,7 @@ José Rodrigo Narváez Berlanga   A01377566
      class List: Node{}
 
      class VariableDeclaration: Node{}
+     class CallNode: Node{}
 
 
 
