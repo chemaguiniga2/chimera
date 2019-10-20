@@ -8,6 +8,7 @@ José Rodrigo Narváez Berlanga   A01377566
      class Program: Node{}
 
      class ConstantDeclaration: Node{}
+     class ParameterDeclaration : Node { }
      class Statement: Node{}
      class StatementList: Node{}
      class ProcedureDeclarationList: Node{}
