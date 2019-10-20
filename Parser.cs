@@ -683,12 +683,20 @@ namespace Chimera {
             case TokenCategory.INITLIST:
                 return List();
             case TokenCategory.IDENTIFIER:
-                Node resultNode = null;
-                resultNode.AnchorToken = Expect(TokenCategory.IDENTIFIER);
-                if(CurrentToken == TokenCategory.INITPARENTHESIS){
-                    resultNode.Add(Call());
+                var resultIden = new Identifier() {};
+                // Console.WriteLine("Es aqui");
+                resultIden.AnchorToken = Expect(TokenCategory.IDENTIFIER);
+
+                if (CurrentToken == TokenCategory.INITPARENTHESIS) {
+                    resultIden.Add(Call());
                 }
-                return resultNode;
+                return resultIden;
+                // Node resultNode = null;
+                // resultNode.AnchorToken = Expect(TokenCategory.IDENTIFIER);
+                // if(CurrentToken == TokenCategory.INITPARENTHESIS){
+                //     resultNode.Add(Call());
+                // }
+                // return resultNode;
             default:
                 throw new SyntaxError(firstOfSimpleExpression, 
                     tokenStream.Current);
