@@ -593,17 +593,20 @@ namespace Chimera {
             }
         }
 
-        public void LogicOperator(){
+        public Node LogicOperator(){
             switch(CurrentToken) {
                 case TokenCategory.AND:
-                    Expect(TokenCategory.AND);
-                    break;
+                    return new AndOperator() {
+                        AnchorToken = Expect(TokenCategory.AND)
+                    };
                 case TokenCategory.OR:
-                    Expect(TokenCategory.OR);
-                    break;
+                    return new OrOperator() {
+                        AnchorToken = Expect(TokenCategory.OR)
+                    };
                 case TokenCategory.XOR:
-                    Expect(TokenCategory.XOR);
-                    break;
+                    return new XorOperator() {
+                        AnchorToken = Expect(TokenCategory.XOR)
+                    };
                 default:
                     throw new SyntaxError(firstOfStatement, 
                                         tokenStream.Current);
@@ -622,23 +625,29 @@ namespace Chimera {
         public void RelationalOperator() {
             switch(CurrentToken) {
                 case TokenCategory.EQUAL:
-                    Expect(TokenCategory.EQUAL);
-                    break;
+                    return new EqualOperator() {
+                        AnchorToken = Expect(TokenCategory.EQUAL)
+                    };
                 case TokenCategory.INEQUAL:
-                    Expect(TokenCategory.INEQUAL);
-                    break;
+                    return new InequalOperator() {
+                        AnchorToken = Expect(TokenCategory.INEQUAL)
+                    };
                 case TokenCategory.LESSTHAN:
-                    Expect(TokenCategory.LESSTHAN);
-                    break;
+                    return new LessThanOperator() {
+                        AnchorToken = Expect(TokenCategory.LESSTHAN)
+                    };
                 case TokenCategory.BIGGERTHAN:
-                    Expect(TokenCategory.BIGGERTHAN);
-                    break;
+                    return new BiggerThanOperator() {
+                        AnchorToken = Expect(TokenCategory.BIGGERTHAN)
+                    };
                 case TokenCategory.LESSOREQUAL:
-                    Expect(TokenCategory.LESSOREQUAL);
-                    break;
+                    return new LessOrEqualOperator() {
+                        AnchorToken = Expect(TokenCategory.LESSOREQUAL)
+                    };
                 case TokenCategory.BIGGEROREQUAL:
-                    Expect(TokenCategory.BIGGEROREQUAL);
-                    break;
+                    return new BiggerOrEqualOperator() {
+                        AnchorToken = Expect(TokenCategory.BIGGEROREQUAL)
+                    };
                 default:
                     throw new SyntaxError(firstOfStatement, 
                                         tokenStream.Current);
