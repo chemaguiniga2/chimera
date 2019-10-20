@@ -310,7 +310,7 @@ namespace Chimera {
         public Node List()
         {
             Expect(TokenCategory.INITLIST);
-            var simpleLitList = SimpleLiteralList();
+            var simpleLitList = new SimpleLiteralList();
             simpleLitList.add(SimpleLiteral());
             while (CurrentToken == TokenCategory.COMMA)
             {
@@ -360,7 +360,7 @@ namespace Chimera {
 
         public Node AssignmentCallStatement(){
             var identif = Expect(TokenCategory.IDENTIFIER);
-            var expressionL = ExpressionList();
+            var expressionL = new ExpressionList();
             //Console.WriteLine(CurrentToken);
             if(CurrentToken == TokenCategory.INITBRACKET || CurrentToken == TokenCategory.CONSTANTDECLARATION ){
                 if(CurrentToken == TokenCategory.INITBRACKET){
@@ -432,14 +432,16 @@ namespace Chimera {
             }
             Expect(TokenCategory.END);
             Expect(TokenCategory.ENDLINE);
-            var result = new LoaderOptimization() { stmtList };
+            var result = new Loop() { stmtList };
             result.AnchorToken = idToken;
             return result;
         }
         public Node For()
         {
             var idToken = Expect(TokenCategory.FOR);
-            var identifier = Expect(TokenCategory.IDENTIFIER);
+            var identifier = new Identifier() {
+                AnchorToken = Expect(TokenCategory.IDENTIFIER)
+            };
             Expect(TokenCategory.IN);
             var expr = Expression();
             Expect(TokenCategory.DO);
@@ -450,7 +452,7 @@ namespace Chimera {
             }
             Expect(TokenCategory.END);
             Expect(TokenCategory.ENDLINE);
-            var result = new FormatException() { identifier, expr, stmtList };
+            var result = new For() { identifier, expr, stmtList };
             result.AnchorToken = idToken;
             return result;
             //Si nos estamos refiriendo a FormatException?
