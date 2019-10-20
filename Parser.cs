@@ -324,19 +324,15 @@ namespace Chimera {
         }
 
 
-        public void SimpleType(){
+        public Token SimpleType(){
             switch (CurrentToken) {
                 case TokenCategory.INTEGER:
-                    Expect(TokenCategory.INTEGER);
-                    break;
+                    return Expect(TokenCategory.INTEGER);
                 case TokenCategory.STRING:
-                    Expect(TokenCategory.STRING);
-                    break;
+                    return Expect(TokenCategory.STRING);
                 case TokenCategory.BOOLEAN:
-                    Expect(TokenCategory.BOOLEAN);
-                    break;
+                    return Expect(TokenCategory.BOOLEAN);
                 default:
-                // No estoy segura de que clase mandar
                     throw new SyntaxError(firstOfSimpleExpression, 
                                         tokenStream.Current);
             }
