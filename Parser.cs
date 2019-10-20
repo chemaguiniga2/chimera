@@ -304,20 +304,6 @@ namespace Chimera {
             result.AnchorToken = idToken;
             return result;
         }
-
-
-        public void ParameterDeclaration()
-        {
-            Expect(TokenCategory.IDENTIFIER);
-            while(CurrentToken == TokenCategory.COMMA)
-            {
-                Expect(TokenCategory.IDENTIFIER);
-            }
-            Expect(TokenCategory.DECLARATION);
-            Type();
-            Expect(TokenCategory.ENDLINE);
-        }
-
         
         
 
@@ -338,55 +324,6 @@ namespace Chimera {
         }
 
 
-        public void List(){
-            Expect(TokenCategory.INITLIST);
-            if(CurrentToken == TokenCategory.INTEGERLITERAL | CurrentToken == TokenCategory.STRINGLITERAL | CurrentToken == TokenCategory.BOOLEANITERAL){
-                SimpleLiteral();
-                while(CurrentToken == TokenCategory.COMMA){
-                    Expect(TokenCategory.COMMA);
-                    SimpleLiteral();
-                }
-            }            
-            Expect(TokenCategory.CLOSINGLIST);
-        }
-
-        public void VariableDeclaration(){
-            Expect(TokenCategory.VAR);
-            do{
-                Expect(TokenCategory.IDENTIFIER);
-                while(CurrentToken == TokenCategory.COMMA){
-                    Expect(TokenCategory.COMMA);
-                    Expect(TokenCategory.IDENTIFIER);
-                }
-                Expect(TokenCategory.DECLARATION);
-                Type();
-                Expect(TokenCategory.ENDLINE);
-            }
-            while(CurrentToken == TokenCategory.IDENTIFIER);
-            
-        }
-
-        public void Type(){
-            switch(CurrentToken){
-                case TokenCategory.LIST:
-                    ListType();
-                    break;
-                case TokenCategory.INTEGER:
-                    SimpleType();
-                    break;
-                case TokenCategory.STRING:
-                    SimpleType();
-                    break;
-                case TokenCategory.BOOLEAN:
-                    SimpleType();
-                    break;
-                default:
-                // No estoy segura de qué clase mandar
-                    throw new SyntaxError(firstOfSimpleExpression, 
-                                        tokenStream.Current);            
-            }
-        }
-
         public void SimpleType(){
             switch (CurrentToken) {
                 case TokenCategory.INTEGER:
@@ -404,12 +341,6 @@ namespace Chimera {
                                         tokenStream.Current);
             }
         }
-
-        // public void ListType(){
-        //     Expect(TokenCategory.LIST);
-        //     Expect(TokenCategory.OF);
-        //     SimpleType();
-        // }
 
         public Node Statement() {
             switch (CurrentToken) {
@@ -463,30 +394,6 @@ namespace Chimera {
             return result;
         }
 
-        public void AssignmentStatement(){
-
-            if(CurrentToken == TokenCategory.INITBRACKET){
-                Expect(TokenCategory.INITBRACKET);
-                Expression();
-                Expect(TokenCategory.CLOSINGBRACKET);
-            }
-            Expect(TokenCategory.CONSTANTDECLARATION);
-            Expression();
-            Expect(TokenCategory.ENDLINE);
-        }
-
-        public void CallStatement(){
-            Expect(TokenCategory.INITPARENTHESIS);
-            if(firstOfSimpleExpression.Contains(CurrentToken)){
-                Expression();
-                while(CurrentToken == TokenCategory.COMMA){
-                    Expect(TokenCategory.COMMA);
-                    Expression();
-                }                
-            }
-            Expect(TokenCategory.CLOSINGPARENTHESIS);
-            Expect(TokenCategory.ENDLINE);
-        }
 
         public Node If() {
             var ifToken = Expect(TokenCategory.IF);
