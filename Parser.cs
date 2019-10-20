@@ -143,40 +143,36 @@ namespace Chimera {
             var varNode = new VariableDeclarationList();
             varNode.AnchorToken = Expect(TokenCategory.VAR);
 
-            while (CurrentToken == TokenCategory.IDENTIFIER)
+            do
             {
-                var id1Node = new Identifier(){
+                var id1Node = new Identifier()
+                {
                     AnchorToken = Expect(TokenCategory.IDENTIFIER)
                 };
                 while (CurrentToken == TokenCategory.COMMA)
-                {                    
-                    var commaNode = new Identifier(){
+                {
+                    var commaNode = new Identifier()
+                    {
                         AnchorToken = Expect(TokenCategory.COMMA)
                     };
-                    var id2Node = new Identifier(){
+                    var id2Node = new Identifier()
+                    {
                         AnchorToken = Expect(TokenCategory.IDENTIFIER)
                     };
-
                     commaNode.Add(id1Node);
                     commaNode.Add(id2Node);
-
                     id1Node = commaNode;
-
                 }
-                var declNode = new Identifier(){
+                var declNode = new Identifier()
+                {
                     AnchorToken = Expect(TokenCategory.DECLARATION) //declaration
                 };
                 declNode.Add(id1Node);
                 declNode.Add(Type());
-
                 Expect(TokenCategory.ENDLINE); //end of line
                 varNode.Add(declNode);
-
-            }
-            
+            } while (CurrentToken == TokenCategory.IDENTIFIER);
             return varNode;
-
-           
         }
 
         public Node Literal()
@@ -254,15 +250,15 @@ namespace Chimera {
             Expect(TokenCategory.OF);
             switch (CurrentToken)
             {
-                case TokenCategory.STRINGLITERAL:
+                case TokenCategory.STRING:
                     return new Type(){
                         AnchorToken = SimpleType()
                     };
-                case TokenCategory.BOOLEANITERAL:
+                case TokenCategory.BOOLEAN:
                     return new Type(){
                         AnchorToken = SimpleType()
                     };
-                case TokenCategory.INTEGERLITERAL:
+                case TokenCategory.INTEGER:
                     return new Type(){
                         AnchorToken = SimpleType()
                     };
