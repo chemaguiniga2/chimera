@@ -570,12 +570,12 @@ namespace Chimera {
         public Node SumOperator() {
             switch(CurrentToken) {
                 case TokenCategory.ADDITION:
-                    return new Addition(){
-                        AnchorToken = Expect(TokenCategory.ADDITION);
+                    return new AdditionOperator() {
+                        AnchorToken = Expect(TokenCategory.ADDITION)
                     };
                 case TokenCategory.SUBSTRACT:
-                    return new Substract(){
-                        AnchorToken = Expect(TokenCategory.SUBSTRACT);
+                    return new SubstractOperator() {
+                        AnchorToken = Expect(TokenCategory.SUBSTRACT)
                     };
                 default:
                     throw new SyntaxError(firstOfStatement, 
@@ -583,7 +583,7 @@ namespace Chimera {
             }
         }
 
-        public void UnaryExpression() {
+        public Node UnaryExpression() {
             switch(CurrentToken) {
                 case TokenCategory.NOT:
                     Expect(TokenCategory.NOT);
@@ -657,7 +657,7 @@ namespace Chimera {
             }
         }
 
-        public void Call(){
+        public Node Call(){
             Expect(TokenCategory.INITPARENTHESIS);
             //if(CurrentToken == TokenCategory.NOT | CurrentToken == TokenCategory.SUBSTRACT | CurrentToken == TokenCategory.INTEGERLITERAL | CurrentToken == TokenCategory.STRINGLITERAL | CurrentToken == TokenCategory.BOOLEANITERAL | CurrentToken == TokenCategory.IDENTIFIER){
             Node result = null;
