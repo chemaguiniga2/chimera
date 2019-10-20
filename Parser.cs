@@ -326,18 +326,19 @@ namespace Chimera {
 
         public Node ParameterDeclaration()
         {
-            Expect(TokenCategory.PARAM);
-            var paramToken = Expect(TokenCategory.IDENTIFIER);
-            var paramList = IdentifierList();
+            var idToken = Expect(TokenCategory.IDENTIFIER);
+            var paramList = new IdentifierList();
             while (CurrentToken == TokenCategory.COMMA)
             {
-                paramList.Add(TokenCategory.IDENTIFIER);
+                paramList.Add(new Identifier()
+                {
+                    AnchorToken = Expect(TokenCategory.IDENTIFIER)
+                });
             }
-
-            Expect(TokenCategory.CONSTANT);
+            Expect(TokenCategory.DECLARATION);
             var type = Type();
             Expect(TokenCategory.ENDLINE);
-            var result = new ParameterDeclaration() { paramToken, paramList, type };
+            var result = new ParameterDeclaration() { paramList, type };
             result.AnchorToken = idToken;
             return result;
         }
