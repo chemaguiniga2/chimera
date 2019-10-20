@@ -678,6 +678,12 @@ namespace Chimera {
                 Expect(TokenCategory.INITPARENTHESIS);
                 var result = Expression();
                 Expect(TokenCategory.CLOSINGPARENTHESIS);
+                if (CurrentToken == TokenCategory.INITBRACKET)
+                {
+                    Expect(TokenCategory.INITBRACKET);
+                    result.Add(Expression());
+                    Expect(TokenCategory.CLOSINGBRACKET);
+                }
                 return result;
             case TokenCategory.INTEGERLITERAL:
                 return SimpleLiteral();
@@ -695,6 +701,12 @@ namespace Chimera {
                 if (CurrentToken == TokenCategory.INITPARENTHESIS) {
                     resultIden.Add(Call());
                 }
+                if (CurrentToken == TokenCategory.INITBRACKET)
+                {
+                    Expect(TokenCategory.INITBRACKET);
+                    resultIden.Add(Expression());
+                    Expect(TokenCategory.CLOSINGBRACKET);
+                }
                 return resultIden;
                 // Node resultNode = null;
                 // resultNode.AnchorToken = Expect(TokenCategory.IDENTIFIER);
@@ -707,12 +719,12 @@ namespace Chimera {
                     tokenStream.Current);
             }
             //Porque este if no entra dentro del switch
-            if (CurrentToken == TokenCategory.INITBRACKET)
+            /*if (CurrentToken == TokenCategory.INITBRACKET)
             {
                 Expect(TokenCategory.INITBRACKET);
                 Expression();
                 Expect(TokenCategory.CLOSINGBRACKET);
-            }
+            }*/
         }
 
         public Node Call(){
