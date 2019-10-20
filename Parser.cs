@@ -479,13 +479,15 @@ namespace Chimera {
             return LogicExpression();
         }
 
-        public void LogicExpression(){
-            RelationalExpression();
-            //while(CurrentToken == TokenCategory.AND | CurrentToken == TokenCategory.OR | CurrentToken == TokenCategory.XOR){
+        public Node LogicExpression(){
+            var logExpr1 = RelationalExpression();
             while(firstOfOperator.Contains(CurrentToken)){
-                LogicOperator();
-                RelationalExpression();
-            }            
+                var logExpr2 = LogicOperator();
+                logExpr2.Add(logExpr1);
+                logExpr2.Add(RelationalExpression());
+                logExpr1 = logExpr2;
+            }  
+            return logExpr1;
         }
 
         public void RelationalExpression(){
