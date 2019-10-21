@@ -55,6 +55,9 @@ José Rodrigo Narváez Berlanga   A01377566
      class CallNode: Node{}
      class SimpleLiteral: Node{}
      class SimpleType: Node{}
+     class Then: Node{}
+     class ElseIf: Node{}
+     class Else: Node{}
 
 
 

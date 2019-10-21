@@ -139,13 +139,11 @@ namespace Chimera {
 
         public Node VariableDeclaration()
         {
-
-            var varNode = new VariableDeclarationList();
-            varNode.AnchorToken = Expect(TokenCategory.VAR);
-
+            var declarationList = new VariableDeclarationList();
+            declarationList.AnchorToken = Expect(TokenCategory.VAR);
             do
             {
-                var id1Node = new Identifier()
+                var firstIdentifier = new Identifier()
                 {
                     AnchorToken = Expect(TokenCategory.IDENTIFIER)
                 };
@@ -155,26 +153,25 @@ namespace Chimera {
                     {
                         AnchorToken = Expect(TokenCategory.COMMA)
                     };
-                    var id2Node = new Identifier()
+                    var tempNode = new Identifier()
                     {
                         AnchorToken = Expect(TokenCategory.IDENTIFIER)
                     };
-                    commaNode.Add(id1Node);
-                    commaNode.Add(id2Node);
-                    id1Node = commaNode;
+                    commaNode.Add(firstIdentifier);
+                    commaNode.Add(tempNode);
+                    firstIdentifier = commaNode;
                 }
-                var declNode = new Identifier()
+                var dNode = new Identifier()
                 {
-                    AnchorToken = Expect(TokenCategory.DECLARATION) //declaration
+                    AnchorToken = Expect(TokenCategory.DECLARATION)
                 };
-                declNode.Add(id1Node);
-                declNode.Add(Type());
-                Expect(TokenCategory.ENDLINE); //end of line
-                varNode.Add(declNode);
+                dNode.Add(firstIdentifier);
+                dNode.Add(Type());
+                Expect(TokenCategory.ENDLINE);
+                declarationList.Add(dNode);
             } while (CurrentToken == TokenCategory.IDENTIFIER);
-            return varNode;
+            return declarationList;
         }
-
         public Node Literal()
         {
             switch (CurrentToken)
@@ -436,35 +433,96 @@ namespace Chimera {
 
         public Node If() {
             var ifToken = Expect(TokenCategory.IF);
-            var exprList = new ExpressionList();
-            exprList.Add(Expression());
+            var nodeIf =  new If() {
+                AnchorToken = ifToken
+            };
+
+            nodeIf.Add(Expression());
             Expect(TokenCategory.THEN);
             var stmtList = new StatementList();
             while (firstOfStatement.Contains(CurrentToken)) {
                 stmtList.Add(Statement());
             }
-            if(CurrentToken == TokenCategory.ELSEIF) {
-                while (CurrentToken == TokenCategory.ELSEIF) {
-                    Expect(TokenCategory.ELSEIF);
-                    exprList.Add(Expression());
-                    Expect(TokenCategory.THEN);
-                    while (firstOfStatement.Contains(CurrentToken)) {
-                        stmtList.Add(Statement());
-                    }
-                }
-            }
-            if(CurrentToken == TokenCategory.ELSE) {
-                Expect(TokenCategory.ELSE);
-                while (firstOfStatement.Contains(CurrentToken)) {
-                    stmtList.Add(Statement());
 
+            nodeIf.Add(stmtList);
+
+            while (CurrentToken == TokenCategory.ELSEIF) {
+                var nodeElseIf = new ElseIf() {
+                    AnchorToken = Expect(TokenCategory.ELSEIF)
+                };
+
+                nodeElseIf.Add(Expression());
+                Expect(TokenCategory.THEN);
+
+                var stmtListElseIf = new StatementList();
+                while (firstOfStatement.Contains(CurrentToken))
+                {
+                    stmtListElseIf.Add(Statement());
                 }
+
+                nodeElseIf.Add(stmtListElseIf);
+                nodeIf.Add(nodeElseIf);
+
             }
+
+            while (CurrentToken == TokenCategory.ELSE) {
+                var nodeElse = new Else() {
+                    AnchorToken =  Expect(TokenCategory.ELSE)
+                };
+
+                var stmtListElse = new StatementList(); 
+                while (firstOfStatement.Contains(CurrentToken))
+                {
+                    stmtListElse.Add(Statement());
+                }
+
+                nodeElse.Add(stmtListElse);
+                nodeIf.Add(nodeElse);
+            }
+
             Expect(TokenCategory.END);
             Expect(TokenCategory.ENDLINE);
-            var result = new If() { exprList, stmtList };
-            result.AnchorToken = ifToken;
-            return result;
+
+            return nodeIf;
+
+           
+            // var ifToken = Expect(TokenCategory.IF);
+            // var exprList = new ExpressionList();
+            // exprList.Add(Expression());
+            // var thenNode = new Then() {
+            //     AnchorToken = Expect(TokenCategory.THEN)
+            // };
+            // var stmtList = new StatementList();
+            // while (firstOfStatement.Contains(CurrentToken)) {
+            //     stmtList.Add(Statement());
+            // }
+            // if(CurrentToken == TokenCategory.ELSEIF) {
+            //     while (CurrentToken == TokenCategory.ELSEIF) {
+            //         var elseIf = new ElseIf() {
+            //             AnchorToken = Expect(TokenCategory.ELSEIF)
+            //         };
+            //         exprList.Add(Expression());
+            //         Console.WriteLine("Revisa then");
+            //         var thenNodetwo = new Then() {
+            //             AnchorToken = Expect(TokenCategory.THEN)
+            //         };
+            //         while (firstOfStatement.Contains(CurrentToken)) {
+            //             stmtList.Add(Statement());
+            //         }
+            //     }
+            // }
+            // if(CurrentToken == TokenCategory.ELSE) {
+            //     Expect(TokenCategory.ELSE);
+            //     while (firstOfStatement.Contains(CurrentToken)) {
+            //         stmtList.Add(Statement());
+
+            //     }
+            // }
+            // Expect(TokenCategory.END);
+            // Expect(TokenCategory.ENDLINE);
+            // var result = new If() { exprList, stmtList };
+            // result.AnchorToken = ifToken;
+            // return result;
         }
 
         public Node Loop() {
