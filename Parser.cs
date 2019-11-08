@@ -397,11 +397,13 @@ namespace Chimera {
             }            
         }
 
+        
         public Node AssignmentCallStatement(){
             var identif = Expect(TokenCategory.IDENTIFIER);
             var expression = new Expression();
+            var expression2 = new Expression();
             var expressionL = new ExpressionList();
-            //Console.WriteLine(CurrentToken);
+            //assignment-statement
             if(CurrentToken == TokenCategory.INITBRACKET || CurrentToken == TokenCategory.CONSTANTDECLARATION ){
                 if(CurrentToken == TokenCategory.INITBRACKET){
                     Expect(TokenCategory.INITBRACKET);
@@ -409,9 +411,13 @@ namespace Chimera {
                     Expect(TokenCategory.CLOSINGBRACKET);
                 }
                 Expect(TokenCategory.CONSTANTDECLARATION);
-                expressionL.Add(Expression());
+                expression2.Add(Expression());
                 Expect(TokenCategory.ENDLINE);
+                var resultAss = new AssignmentStatement(){expression, expression2};
+                resultAss.AnchorToken = identif;
+                return resultAss;
             }
+            //call-statement
             else if(CurrentToken == TokenCategory.INITPARENTHESIS){
                 Expect(TokenCategory.INITPARENTHESIS);
                 if(firstOfSimpleExpression.Contains(CurrentToken)){
@@ -424,10 +430,10 @@ namespace Chimera {
                 Expect(TokenCategory.CLOSINGPARENTHESIS);
                 Expect(TokenCategory.ENDLINE);
             }
+            var resultCall = new CallStatement(){expression, expressionL};
+            resultCall.AnchorToken = identif;
+            return resultCall;
 
-            var result = new AssignmentCallStatement(){expression, expressionL};
-            result.AnchorToken = identif;
-            return result;
         }
 
 
