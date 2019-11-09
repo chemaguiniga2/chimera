@@ -10,5 +10,11 @@ namespace Chimera {
 
     public enum Type {
         // agregar nuestros tipos
+        INTEGER,
+        STRING,
+        BOOLEAN,
+        LIST,
+        OF
+
     }
 }
