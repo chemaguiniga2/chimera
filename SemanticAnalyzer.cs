@@ -4,65 +4,126 @@ José María Aguíñiga Díaz        A01376669
 José Rodrigo Narváez Berlanga   A01377566
  */
 
- using System;
+using System;
 using System.Collections.Generic;
+using System.Collections;
 
 namespace Chimera {
 
     class SemanticAnalyzer {
 
-        
-        // Buttercup
-        /*
         //-----------------------------------------------------------
-        static readonly IDictionary<TokenCategory, Type> typeMapper =
-            new Dictionary<TokenCategory, Type>() {
-                { TokenCategory.BOOL, Type.BOOL },
-                { TokenCategory.INT, Type.INT }                
+        /*static readonly IDictionary<TokenCategory, TypeG> typeMapper =
+            new Dictionary<TokenCategory, TypeG>() {
+                { TokenCategory.INTEGER, TypeG.INTEGER },
+                { TokenCategory.STRING, TypeG.STRING },
+                { TokenCategory.BOOLEAN, TypeG.BOOLEAN },
+                { TokenCategory.BOOLEAN, TypeG.VOID },
+                { TokenCategory.LIST, TypeG.LIST },
+                { TokenCategory.OF, TypeG.OF }                     
+            };
+            */
+
+            static readonly IDictionary<TokenCategory, TypeG> typeMapperConstDecl =
+            new Dictionary<TokenCategory, TypeG>() {
+                { TokenCategory.CONST, TypeG.CONST},
+                { TokenCategory.VAR, TypeG.VAR}               
             };
 
+
         //-----------------------------------------------------------
-        public SymbolTable Table {
+        public GloabalDeclaratonTable GloabalDeclaratonT {
             get;
             private set;
         }
 
+        /*public SymbolTable GlobalDeclarationTable {
+            get;
+            private set;
+        }
+
+        public SymbolTable LocalDeclarationTable {
+            get;
+            private set;
+        }*/
+
+        private void fillDefineProcedure() {
+            //Input/Output Operations
+            //ProcedureTable["WrInt"] = new List{VOID, true, new SymbolTable("WrInt")};
+            // ProcedureTable["WrStr"] = new ArrayList{VOID, true, new SymbolTable("WrStr")};
+            // ProcedureTable["WrBool"] = new ArrayList{VOID, true, new SymbolTable("WrBool")};
+            // ProcedureTable["WrLn"] = new ArrayList{VOID, true, new SymbolTable("WrLn")};
+            // ProcedureTable["RdInt"] = new ArrayList{INTEGER, true};
+            // ProcedureTable["RdStr"] = new ArrayList{STRING, true};
+            // //String Operations
+            // ProcedureTable["AtStr"] = new ArrayList{STRING, true, new SymbolTable("AtStr")};
+            // ProcedureTable["LenStr"] = new ArrayList{INTEGER, true, new SymbolTable("LenStr")};
+            // ProcedureTable["CmpStr"] = new ArrayList{INTEGER, true, new SymbolTable("CmpStr")};
+            // ProcedureTable["CatStr"] = new ArrayList{STRING, true, new SymbolTable("CatStr")};
+            // //List Operations
+            // ProcedureTable["LenLstInt"] = new ArrayList{INTEGER, true, new SymbolTable("LenLstInt")};
+            // ProcedureTable["LenLstStr"] = new ArrayList{INTEGER, true, new SymbolTable("LenLstStr")};
+            // ProcedureTable["LenLstBool"] = new ArrayList{INTEGER, true, new SymbolTable("LenLstBool")};
+            // ProcedureTable["NewLstInt"] = new ArrayList{LIST, true, new SymbolTable("NewLstInt")};
+            // ProcedureTable["NewLstStr"] = new ArrayList{LIST, true, new SymbolTable("NewLstStr")};
+            // ProcedureTable["NewLstBool"] = new ArrayList{LIST, true, new SymbolTable("NewLstBool")};
+            // //Conversion Operations
+            // ProcedureTable["IntToStr"] = new ArrayList{STRING, true, new SymbolTable("IntToStr")};
+            // ProcedureTable["StrToInt"] = new ArrayList{INTEGER, true, new SymbolTable("StrToInt")};
+
+        }
+
         //-----------------------------------------------------------
         public SemanticAnalyzer() {
-            Table = new SymbolTable();
+            GloabalDeclaratonT = new GloabalDeclaratonTable();
+            //GlobalDeclarationTable = new SymbolTable("Global Declaration Table");
+            //LocalDeclarationTable = new SymbolTable("Local Declaration Table");
         }
 
         //-----------------------------------------------------------
-        public Type Visit(Program node) {
+        public TypeG Visit(Program node) {
+            //fillDefineProcedure();
             Visit((dynamic) node[0]);
-            Visit((dynamic) node[1]);
-            return Type.VOID;
+            //Visit((dynamic) node[1]);
+            return TypeG.VOID;
         }
 
+        // Buttercup
+        
         //-----------------------------------------------------------
-        public Type Visit(DeclarationList node) {
+        public TypeG Visit(ConstantDeclarationList node) {
             VisitChildren(node);
-            return Type.VOID;
+            return TypeG.VOID;
         }
-
+        
         //-----------------------------------------------------------
-        public Type Visit(Declaration node) {
-
-            var variableName = node[0].AnchorToken.Lexeme;
-
-            if (Table.Contains(variableName)) {
+        public TypeG Visit(ConstantDeclaration node) {
+            var variableName = node.AnchorToken.Lexeme;
+            var varieblaValue = node[0].AnchorToken.Lexeme;
+            if (GloabalDeclaratonT.Contains(variableName)) {
                 throw new SemanticError(
                     "Duplicated variable: " + variableName,
                     node[0].AnchorToken);
 
             } else {
-                Table[variableName] = 
-                    typeMapper[node.AnchorToken.Category];              
+                GloabalDeclaratonT[variableName] = 
+                    new GlobalDeclarationType(variableName, TypeG.CONST/*typeMapperConstDecl[node.AnchorToken.Category]*/, varieblaValue, true);
+                            
+                // para tener dos constates
+                 GloabalDeclaratonT["otroo"] = new GlobalDeclarationType("es prueba", TypeG.CONST, 5, true);
+                     
             }
 
-            return Type.VOID;
+            return TypeG.VOID;
         }
 
+        void VisitChildren(Node node) {
+            foreach (var n in node) {
+                Visit((dynamic) n);
+            }
+        }
+
+        /*
         //-----------------------------------------------------------
         public Type Visit(StatementList node) {
             VisitChildren(node);

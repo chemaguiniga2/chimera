@@ -14,13 +14,14 @@ namespace Chimera
     public class Driver
     {
 
-        const string VERSION = "0.3";
+        const string VERSION = "0.4";
 
         //-----------------------------------------------------------
         static readonly string[] ReleaseIncludes = {
             "Lexical analysis",
             "Syntactic analysis",
-            "AST construction"
+            "AST construction",
+            "Semantic analysis"
         };
 
 
@@ -106,18 +107,33 @@ namespace Chimera
                 var input = File.ReadAllText(inputPath);
                 var parser = new Parser(new Scanner(input).Start().GetEnumerator());
                 var program = parser.Program();
-                Console.Write(program.ToStringTree());
+                //Console.Write(program.ToStringTree());
+                Console.WriteLine("Syntax OK.");
+
+                var semantic = new SemanticAnalyzer();
+                semantic.Visit((dynamic) program);
+
+                Console.WriteLine("Semantics OK.");
+                Console.WriteLine();
+                //solucion profe
+                Console.WriteLine("Global Declaration Table");
+                Console.WriteLine("============");
+                foreach (var entry in semantic.GloabalDeclaratonT) {
+                    Console.WriteLine(entry);  
+                                                         
+                }
+                Console.WriteLine();
+                // mi solución
+                Console.WriteLine(semantic.GloabalDeclaratonT);
 
             }
             catch (Exception e)
             {
-
-                if (e is FileNotFoundException || e is SyntaxError)
+                if (e is FileNotFoundException || e is SyntaxError || e is SemanticError)
                 {
                     Console.Error.WriteLine(e.Message);
                     Environment.Exit(1);
                 }
-
                 throw;
             }
 

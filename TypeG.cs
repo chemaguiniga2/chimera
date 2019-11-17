@@ -8,13 +8,14 @@ José Rodrigo Narváez Berlanga   A01377566
 
 namespace Chimera {
 
-    public enum Type {
+    public enum TypeG {
         // agregar nuestros tipos
         INTEGER,
         STRING,
         BOOLEAN,
-        LIST,
-        OF
-
+        VOID,
+        LIST_OF_INTEGER,
+        CONST,
+        VAR
     }
 }
