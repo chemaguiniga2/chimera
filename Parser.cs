@@ -137,38 +137,74 @@ namespace Chimera {
             return result;
         }
 
+        // public Node VariableDeclaration()
+        // {
+        //     var declarationList = new VariableDeclarationList();
+        //     declarationList.AnchorToken = Expect(TokenCategory.VAR);
+        //     do
+        //     {
+        //         var firstIdentifier = new Identifier()
+        //         {
+        //             AnchorToken = Expect(TokenCategory.IDENTIFIER)
+        //         };
+        //         while (CurrentToken == TokenCategory.COMMA)
+        //         {
+        //             var commaNode = new Identifier()
+        //             {
+        //                 AnchorToken = Expect(TokenCategory.COMMA)
+        //             };
+        //             var tempNode = new Identifier()
+        //             {
+        //                 AnchorToken = Expect(TokenCategory.IDENTIFIER)
+        //             };
+        //             commaNode.Add(firstIdentifier);
+        //             commaNode.Add(tempNode);
+        //             firstIdentifier = commaNode;
+        //         }
+        //         var dNode = new Identifier()
+        //         {
+        //             AnchorToken = Expect(TokenCategory.DECLARATION)
+        //         };
+        //         dNode.Add(firstIdentifier);
+        //         dNode.Add(Type());
+        //         Expect(TokenCategory.ENDLINE);
+        //         declarationList.Add(dNode);
+        //     } while (CurrentToken == TokenCategory.IDENTIFIER);
+        //     return declarationList;
+        // }
+
         public Node VariableDeclaration()
         {
             var declarationList = new VariableDeclarationList();
             declarationList.AnchorToken = Expect(TokenCategory.VAR);
+            
             do
             {
                 var firstIdentifier = new Identifier()
                 {
                     AnchorToken = Expect(TokenCategory.IDENTIFIER)
                 };
+                declarationList.Add(firstIdentifier);
                 while (CurrentToken == TokenCategory.COMMA)
                 {
-                    var commaNode = new Identifier()
-                    {
-                        AnchorToken = Expect(TokenCategory.COMMA)
-                    };
+                    Expect(TokenCategory.COMMA);
+                    
                     var tempNode = new Identifier()
                     {
                         AnchorToken = Expect(TokenCategory.IDENTIFIER)
-                    };
-                    commaNode.Add(firstIdentifier);
+                    };   
+                    
+                    declarationList.Add(tempNode);
+/*
+                    commaNode.Add(firstIdentifier); 
                     commaNode.Add(tempNode);
-                    firstIdentifier = commaNode;
+                    firstIdentifier = commaNode;*/
                 }
-                var dNode = new Identifier()
-                {
-                    AnchorToken = Expect(TokenCategory.DECLARATION)
-                };
-                dNode.Add(firstIdentifier);
-                dNode.Add(Type());
+                
+                Expect(TokenCategory.DECLARATION);
+                declarationList.Add(Type());
                 Expect(TokenCategory.ENDLINE);
-                declarationList.Add(dNode);
+                
             } while (CurrentToken == TokenCategory.IDENTIFIER);
             return declarationList;
         }
