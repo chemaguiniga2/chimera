@@ -8,9 +8,11 @@ using System;
 using System.Collections.Generic;
 using System.Collections;
 
-namespace Chimera {
+namespace Chimera
+{
 
-    class SemanticAnalyzer {
+    class SemanticAnalyzer
+    {
 
         //-----------------------------------------------------------
         /*static readonly IDictionary<TokenCategory, TypeG> typeMapper =
@@ -24,15 +26,16 @@ namespace Chimera {
             };
             */
 
-            static readonly IDictionary<TokenCategory, TypeG> typeMapperConstDecl =
-            new Dictionary<TokenCategory, TypeG>() {
+        static readonly IDictionary<TokenCategory, TypeG> typeMapperConstDecl =
+        new Dictionary<TokenCategory, TypeG>() {
                 { TokenCategory.CONST, TypeG.CONST},
-                { TokenCategory.VAR, TypeG.VAR}               
-            };
+                { TokenCategory.VAR, TypeG.VAR}
+        };
 
 
         //-----------------------------------------------------------
-        public GloabalDeclaratonTable GloabalDeclaratonT {
+        public GloabalDeclaratonTable GloabalDeclaratonT
+        {
             get;
             private set;
         }
@@ -47,7 +50,8 @@ namespace Chimera {
             private set;
         }*/
 
-        private void fillDefineProcedure() {
+        private void fillDefineProcedure()
+        {
             //Input/Output Operations
             //ProcedureTable["WrInt"] = new List{VOID, true, new SymbolTable("WrInt")};
             // ProcedureTable["WrStr"] = new ArrayList{VOID, true, new SymbolTable("WrStr")};
@@ -74,53 +78,184 @@ namespace Chimera {
         }
 
         //-----------------------------------------------------------
-        public SemanticAnalyzer() {
+        public SemanticAnalyzer()
+        {
             GloabalDeclaratonT = new GloabalDeclaratonTable();
             //GlobalDeclarationTable = new SymbolTable("Global Declaration Table");
             //LocalDeclarationTable = new SymbolTable("Local Declaration Table");
         }
 
         //-----------------------------------------------------------
-        public TypeG Visit(Program node) {
+        public TypeG Visit(Program node)
+        {
             //fillDefineProcedure();
-            Visit((dynamic) node[0]);
-            //Visit((dynamic) node[1]);
+            Console.WriteLine(node[0]);
+            Visit((dynamic)node[0]);
+            Console.WriteLine(node[1]);
+            Visit((dynamic)node[1]);
+            Console.WriteLine("VISITANDO.." + node[2]);
+            Visit((dynamic)node[2]);
             return TypeG.VOID;
         }
 
         // Buttercup
-        
+
         //-----------------------------------------------------------
-        public TypeG Visit(ConstantDeclarationList node) {
+        public TypeG Visit(ConstantDeclarationList node)
+        {
+            Console.WriteLine(node.ToStringTree());
             VisitChildren(node);
+            //Console.WriteLine("FIN");
             return TypeG.VOID;
         }
-        
-        //-----------------------------------------------------------
-        public TypeG Visit(ConstantDeclaration node) {
+
+        //-VAR
+        public TypeG Visit(ConstantDeclaration node)
+        {
             var variableName = node.AnchorToken.Lexeme;
-            var varieblaValue = node[0].AnchorToken.Lexeme;
-            if (GloabalDeclaratonT.Contains(variableName)) {
+            var variableValue = node[0].AnchorToken.Lexeme;
+            if (GloabalDeclaratonT.Contains(variableName))
+            {
                 throw new SemanticError(
                     "Duplicated variable: " + variableName,
                     node[0].AnchorToken);
 
-            } else {
-                GloabalDeclaratonT[variableName] = 
-                    new GlobalDeclarationType(variableName, TypeG.CONST/*typeMapperConstDecl[node.AnchorToken.Category]*/, varieblaValue, true);
-                            
+            }
+            else
+            {
+                GloabalDeclaratonT[variableName] =
+                    new GlobalDeclarationType(variableName, TypeG.CONST/*typeMapperConstDecl[node.AnchorToken.Category]*/, variableValue, true);
+
                 // para tener dos constates
-                 GloabalDeclaratonT["otroo"] = new GlobalDeclarationType("es prueba", TypeG.CONST, 5, true);
-                     
+                GloabalDeclaratonT["otroo"] = new GlobalDeclarationType("es prueba", TypeG.CONST, 5, true);
+
             }
 
             return TypeG.VOID;
         }
 
-        void VisitChildren(Node node) {
-            foreach (var n in node) {
-                Visit((dynamic) n);
+        public TypeG Visit(VariableDeclarationList node)
+        {
+            //Console.WriteLine("Rock"+ node.ToStringTree());
+            //Console.WriteLine("ARBOL\n"+node.ToStringTree()+"PUTO");
+            VisitChildren(node);
+            //Console.WriteLine("FIN");
+            return TypeG.VOID;
+        }
+
+
+        public TypeG Visit(ProcedureDeclarationList node)
+        {
+            //Console.WriteLine("Rock"+ node.ToStringTree());
+            //Console.WriteLine("ARBOL\n"+node.ToStringTree()+"PUTO");
+            VisitChildren(node);
+            //Console.WriteLine("FIN");
+            return TypeG.VOID;
+        }
+
+        public TypeG Visit(ProcedureDeclaration node)
+        {
+            //Console.WriteLine("Rock"+ node.ToStringTree());
+            Console.WriteLine("ARBOL\n" + node.ToStringTree() + "PUTO");
+            VisitChildren(node);
+            //Console.WriteLine("FIN");
+            return TypeG.VOID;
+        }
+
+        public TypeG Visit(ParameterDeclarationList node)
+        {
+            //Console.WriteLine("Rock"+ node.ToStringTree());
+            //Console.WriteLine("ARBOL\n"+node.ToStringTree()+"PUTO");
+            VisitChildren(node);
+            //Console.WriteLine("FIN");
+            return TypeG.VOID;
+        }
+
+        public TypeG Visit(ParameterDeclaration node)
+        {
+            //Console.WriteLine("Rock"+ node.ToStringTree());
+            //Console.WriteLine("ARBOL\n"+node.ToStringTree()+"PUTO");
+            VisitChildren(node);
+            //Console.WriteLine("FIN");
+            return TypeG.VOID;
+        }
+
+        public TypeG Visit(StatementList node)
+        {
+            //Console.WriteLine("Rock"+ node.ToStringTree());
+            //.WriteLine("ARBOL\n"+node.ToStringTree()+"PUTO");
+            VisitChildren(node);
+            //Console.WriteLine("FIN");
+            return TypeG.VOID;
+        }
+
+        public TypeG Visit(CallStatement node)
+        {
+            //Console.WriteLine("Rock"+ node.ToStringTree());
+            //Console.WriteLine("ARBOL\n"+node.ToStringTree()+"PUTO");
+            VisitChildren(node);
+            //Console.WriteLine("FIN");
+            return TypeG.VOID;
+        }
+
+        //-----------------------------------------------------------
+        public TypeG Visit(Identifier node)
+        {
+            var variableName = node.AnchorToken.Lexeme;
+            Console.WriteLine("Casi");
+            Console.WriteLine("INSIDE" + node[0]);
+            var variableValue = node[0].AnchorToken.Lexeme;
+            var is_const = true;
+            /*if (True) {
+                
+            } else { 
+                Console.WriteLine(node[node.getLength()-1]);
+                variableValue = "Another value";
+            }*/
+
+            if (node[0].AnchorToken.Lexeme == "integer")
+            {
+                variableValue = "0";
+                is_const = false;
+
             }
+            else if (node[0].AnchorToken.Lexeme == "string")
+            {
+                variableValue = "";
+                is_const = false;
+            }
+            else if (node[0].AnchorToken.Lexeme == "boolean")
+            {
+                variableValue = "false";
+                is_const = false;
+            }
+            Console.WriteLine("VAR VALUE: " + variableValue);
+            if (GloabalDeclaratonT.Contains(variableName))
+            {
+
+            }
+            else
+            {
+                GloabalDeclaratonT[variableName] =
+                    new GlobalDeclarationType(variableName, TypeG.VAR/*typeMapperConstDecl[node.AnchorToken.Category]*/, variableValue, is_const);
+
+                // para tener dos constates
+                //GloabalDeclaratonT["otroo"] = new GlobalDeclarationType("es prueba", TypeG.CONST, 5, true);
+
+            }
+
+            return TypeG.VOID;
+        }
+
+        void VisitChildren(Node node)
+        {
+            Console.WriteLine("FOR EACH " + node.getLength());
+            foreach (var n in node)
+            {
+                Console.WriteLine("TIPO" + node[node.getLength() - 1]);
+                Visit((dynamic)n);
+            }
+            Console.WriteLine("FIN DEL CICLO");
         }
 
         /*

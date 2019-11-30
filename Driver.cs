@@ -111,6 +111,7 @@ namespace Chimera
                 Console.WriteLine("Syntax OK.");
 
                 var semantic = new SemanticAnalyzer();
+                
                 semantic.Visit((dynamic) program);
 
                 Console.WriteLine("Semantics OK.");
