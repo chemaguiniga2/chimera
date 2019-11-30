@@ -34,6 +34,24 @@ namespace Chimera
 
 
         //-----------------------------------------------------------
+        public static class CurrentContext
+        {
+            public static string context { get; set; }
+            public static LocalDeclarationTable lc { get; set; } 
+        }
+
+        /*public class ContextSwapper
+        {
+            private void Get()
+            {
+                string getValue = CurrentContext.context;
+            }
+            private void Set(String a)
+            {
+                CurrentContext.context = "new value";
+            }
+        }*/
+
         public GloabalDeclaratonTable GloabalDeclaratonT
         {
             get;
@@ -103,6 +121,7 @@ namespace Chimera
         public TypeG Visit(Program node)
         {
             //fillDefineProcedure();
+            CurrentContext.context = "GLOBAL";
             Console.WriteLine(node[0]);
             Visit((dynamic)node[0]);
             Console.WriteLine(node[1]);
@@ -128,25 +147,107 @@ namespace Chimera
         {
             var variableName = node.AnchorToken.Lexeme;
             var variableValue = node[0].AnchorToken.Lexeme;
-            if (GloabalDeclaratonT.Contains(variableName))
+            if ((GloabalDeclaratonT.Contains(variableName) && CurrentContext.context == "GLOBAL")
+                || (LocalDeclarationT.Contains(variableName) && CurrentContext.context == "LOCAL"))
             {
                 throw new SemanticError(
-                    "Duplicated variable: " + variableName,
+                    "Duplicated variable ("+CurrentContext.context+"): " + variableName,
                     node[0].AnchorToken);
-
             }
+
             else
             {
-                GloabalDeclaratonT[variableName] =
-                    new GlobalDeclarationType(variableName, TypeG.CONST/*typeMapperConstDecl[node.AnchorToken.Category]*/, variableValue, true);
+                if (CurrentContext.context == "LOCAL")
+                {
+                    LocalDeclarationT[variableName] =
+                        new LocalDeclarationType(variableName, TypeG.INTEGER, variableValue, 3, TypeG.CONST);
+                }
+                else
+                {
+                    GloabalDeclaratonT[variableName] =
+                        new GlobalDeclarationType(variableName, TypeG.CONST, variableValue, true);
 
-                // para tener dos constates
-                GloabalDeclaratonT["otroo"] = new GlobalDeclarationType("es prueba", TypeG.CONST, 5, true);
+                    // para tener dos constates
+                    //GloabalDeclaratonT["otroo"] = new GlobalDeclarationType("es prueba", TypeG.CONST, 5, true);
+
+                }
 
             }
 
             return TypeG.VOID;
         }
+
+        public TypeG Visit(Identifier node)
+        {
+            var variableName = node.AnchorToken.Lexeme;
+            var variableValue = node.AnchorToken.Lexeme;
+
+            try
+            {
+                variableValue = node[0].AnchorToken.Lexeme;
+            }
+            catch (ArgumentOutOfRangeException e)
+            {
+                return TypeG.VOID;
+            }
+            TypeG type = TypeG.VAR;
+            var is_const = true;
+
+            if (node[0].AnchorToken.Lexeme == "integer")
+            {
+                variableValue = "0";
+                is_const = false;
+                type = TypeG.INTEGER;
+
+            }
+            else if (node[0].AnchorToken.Lexeme == "string")
+            {
+                variableValue = "";
+                is_const = false;
+                type = TypeG.STRING;
+            }
+            else if (node[0].AnchorToken.Lexeme == "boolean")
+            {
+                variableValue = "false";
+                is_const = false;
+                type = TypeG.BOOLEAN;
+            }
+            Console.WriteLine("VAR VALUE: " + variableValue);
+
+            if ((GloabalDeclaratonT.Contains(variableName) && CurrentContext.context == "GLOBAL")
+            || (LocalDeclarationT.Contains(variableName) && CurrentContext.context == "LOCAL"))
+            {
+                throw new SemanticError(
+                    "Duplicated variable (" + CurrentContext.context + "): " + variableName,
+                    node[0].AnchorToken);
+            }
+            else
+            {
+                if (CurrentContext.context == "LOCAL")
+                {
+                    LocalDeclarationT[variableName] =
+                        new LocalDeclarationType(variableName, type, variableValue, 1, TypeG.VAR);
+                }
+                else
+                {
+                    GloabalDeclaratonT[variableName] =
+                        new GlobalDeclarationType(variableName, type, variableValue, false);
+                }
+            }
+            return TypeG.VOID;
+        }
+
+        void VisitChildren(Node node)
+        {
+            Console.WriteLine("FOR EACH " + node.getLength());
+            foreach (var n in node)
+            {
+                Console.WriteLine("TIPO" + n);
+                Visit((dynamic)n);
+            }
+            Console.WriteLine("FIN DEL CICLO");
+        }
+
 
         public TypeG Visit(VariableDeclarationList node)
         {
@@ -168,8 +269,9 @@ namespace Chimera
 
         public TypeG Visit(ProcedureDeclaration node)
         {
-            //Console.WriteLine("Rock"+ node.ToStringTree());
+            Console.WriteLine("tree"+ node.ToStringTree());
             Console.WriteLine("Aqui ando");
+            CurrentContext.context = "LOCAL";
             var procedureName = node[0].AnchorToken.Lexeme;
             Console.WriteLine("1");
             var variableValue = node[2];
@@ -196,6 +298,7 @@ namespace Chimera
             //return TypeG.VOID;
             Console.WriteLine("Visitando hijos");
             VisitChildren(node);
+            CurrentContext.context = "GLOBAL";
             //Console.WriteLine("FIN");
             return TypeG.VOID;
         }
@@ -242,6 +345,60 @@ namespace Chimera
             return TypeG.VOID;
         }
 
+
+        /* ---------- Pending -------- */
+        public TypeG Visit(Expression node)
+        {
+            //Console.WriteLine("Rock"+ node.ToStringTree());
+            //Console.WriteLine("TIPOOOO");
+            VisitChildren(node);
+            //Console.WriteLine("FIN");
+            return TypeG.VOID;
+        }
+        /* ---------- Pending -------- */
+        public TypeG Visit(ExpressionList node)
+        {
+            //Console.WriteLine("Rock"+ node.ToStringTree());
+            //Console.WriteLine("TIPOOOO");
+            VisitChildren(node);
+            //Console.WriteLine("FIN");
+            return TypeG.VOID;
+        }
+
+        /* ---------- Pending -------- */
+        public TypeG Visit(AssignmentStatement node)
+        {
+            //Console.WriteLine("Rock"+ node.ToStringTree());
+            //Console.WriteLine("TIPOOOO");
+            VisitChildren(node);
+            //Console.WriteLine("FIN");
+            return TypeG.VOID;
+        }
+
+
+        /* ---------- Pending -------- */
+        public TypeG Visit(AdditionOperator node)
+        {
+            //Console.WriteLine("Rock"+ node.ToStringTree());
+            //Console.WriteLine("TIPOOOO");
+            VisitChildren(node);
+            //Console.WriteLine("FIN");
+            return TypeG.VOID;
+        }
+
+        /* ---------- Pending -------- */
+        public TypeG Visit(IntegerLiteral node)
+        {
+            //Console.WriteLine("Rock"+ node.ToStringTree());
+            //Console.WriteLine("TIPOOOO");
+            VisitChildren(node);
+            //Console.WriteLine("FIN");
+            return TypeG.VOID;
+        }
+
+
+
+
         public TypeG Visit(IdentifierList node)
         {
             //Console.WriteLine("Rock"+ node.ToStringTree());
@@ -251,71 +408,6 @@ namespace Chimera
         }
 
         //-----------------------------------------------------------
-        public TypeG Visit(Identifier node)
-        {
-            var variableName = node.AnchorToken.Lexeme;
-            //Console.WriteLine("Casi");
-            //Console.WriteLine("INSIDE" + node[0]);
-            var variableValue = node.AnchorToken.Lexeme;
-            try
-            {
-                variableValue = node[0].AnchorToken.Lexeme;
-            } catch (ArgumentOutOfRangeException e) {
-                return TypeG.VOID;
-            }
-
-            var is_const = true;
-            /*if (True) {
-                
-            } else { 
-                Console.WriteLine(node[node.getLength()-1]);
-                variableValue = "Another value";
-            }*/
-
-            if (node[0].AnchorToken.Lexeme == "integer")
-            {
-                variableValue = "0";
-                is_const = false;
-
-            }
-            else if (node[0].AnchorToken.Lexeme == "string")
-            {
-                variableValue = "";
-                is_const = false;
-            }
-            else if (node[0].AnchorToken.Lexeme == "boolean")
-            {
-                variableValue = "false";
-                is_const = false;
-            }
-            Console.WriteLine("VAR VALUE: " + variableValue);
-            if (GloabalDeclaratonT.Contains(variableName))
-            {
-
-            }
-            else
-            {
-                GloabalDeclaratonT[variableName] =
-                    new GlobalDeclarationType(variableName, TypeG.VAR/*typeMapperConstDecl[node.AnchorToken.Category]*/, variableValue, is_const);
-
-                // para tener dos constates
-                //GloabalDeclaratonT["otroo"] = new GlobalDeclarationType("es prueba", TypeG.CONST, 5, true);
-
-            }
-
-            return TypeG.VOID;
-        }
-
-        void VisitChildren(Node node)
-        {
-            Console.WriteLine("FOR EACH " + node.getLength());
-            foreach (var n in node)
-            {
-                Console.WriteLine("TIPO" + n);
-                Visit((dynamic)n);
-            }
-            Console.WriteLine("FIN DEL CICLO");
-        }
 
         /*
         //-----------------------------------------------------------

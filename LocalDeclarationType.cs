@@ -13,20 +13,18 @@ namespace Chimera
     {
         public string key;
         public TypeG type;
-        public string kind;
         public object value;
         public int pos;
-        public bool is_const;
+        public TypeG kind;
 
-        public LocalDeclarationType(string key, TypeG type, string kind, object value, int pos, bool is_const)
+        public LocalDeclarationType(string key, TypeG type, object value, int pos, TypeG kind)
         {
             this.key = key;
             this.type = type;
-            this.kind = kind;
             this.value = value;
             this.pos = pos;
-            this.is_const = is_const;
-        
+            this.kind = kind;
+
         }
     }
 }
