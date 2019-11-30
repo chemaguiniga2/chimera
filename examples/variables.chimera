@@ -9,10 +9,7 @@ const
 var
     x, y, a, b, c, d: integer;
 
-procedure F(
-        b: boolean;
-        z: integer;
-    );
+procedure F() : string ;
 
     const
         konstant := 1000;

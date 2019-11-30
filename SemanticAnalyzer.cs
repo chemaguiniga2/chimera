@@ -40,6 +40,18 @@ namespace Chimera
             private set;
         }
 
+        public ProcedureDeclarationTable ProcedureDeclarationT
+        {
+            get;
+            private set;
+        }
+
+        public LocalDeclarationTable LocalDeclarationT
+        {
+            get;
+            private set;
+        }
+
         /*public SymbolTable GlobalDeclarationTable {
             get;
             private set;
@@ -81,6 +93,8 @@ namespace Chimera
         public SemanticAnalyzer()
         {
             GloabalDeclaratonT = new GloabalDeclaratonTable();
+            ProcedureDeclarationT = new ProcedureDeclarationTable();
+            LocalDeclarationT = new LocalDeclarationTable();
             //GlobalDeclarationTable = new SymbolTable("Global Declaration Table");
             //LocalDeclarationTable = new SymbolTable("Local Declaration Table");
         }
@@ -147,7 +161,7 @@ namespace Chimera
         public TypeG Visit(ProcedureDeclarationList node)
         {
             //Console.WriteLine("Rock"+ node.ToStringTree());
-            //Console.WriteLine("ARBOL\n"+node.ToStringTree()+"PUTO");
+            Console.WriteLine("ARBOL\n" + node.ToStringTree() + "FIN DEL ARBOL");
             VisitChildren(node);
             //Console.WriteLine("FIN");
             return TypeG.VOID;
@@ -156,7 +170,27 @@ namespace Chimera
         public TypeG Visit(ProcedureDeclaration node)
         {
             //Console.WriteLine("Rock"+ node.ToStringTree());
-            Console.WriteLine("ARBOL\n" + node.ToStringTree() + "PUTO");
+            //Console.WriteLine("ARBOL\n"+node.ToStringTree()+"PUTO");
+            var procedureName = node[0].AnchorToken.Lexeme;
+            var variableValue = node[2].AnchorToken.Lexeme;
+            if (ProcedureDeclarationT.Contains(procedureName))
+            {
+                throw new SemanticError(
+                    "Duplicated variable: " + procedureName,
+                    node[0].AnchorToken);
+
+            }
+            else
+            {
+                ProcedureDeclarationT[procedureName] =
+                    new ProcedureDeclarationType(procedureName, TypeG.VOID, false, LocalDeclarationT);
+
+                // para tener dos constates
+                //ProcedureDeclarationT["otroo"] = new ProcedureDeclarationType("es prueba", TypeG.CONST, 5, true);
+
+            }
+
+            //return TypeG.VOID;
             VisitChildren(node);
             //Console.WriteLine("FIN");
             return TypeG.VOID;

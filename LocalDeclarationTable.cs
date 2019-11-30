@@ -5,26 +5,89 @@ José Rodrigo Narváez Berlanga   A01377566
  */
 
 using System;
+using System.Text;
+using System.Collections.Generic;
+using System.Collections;
 
 namespace Chimera
 {
-
-    public struct LocalDeclarationType
+    public class LocalDeclarationTable : IEnumerable<KeyValuePair<string, LocalDeclarationType>>
     {
+        //public class SymbolTable: IEnumerable<KeyValuePair<string, TypeG>> { 
 
-        public string key;
-        public TypeG type;
-        public object value;
-        public bool is_const;
+        IDictionary<string, LocalDeclarationType> data = new SortedDictionary<string, LocalDeclarationType>();
+        // IDictionary<string, TypeG> data = new SortedDictionary<string, TypeG>();
 
-        public LocalDeclarationType(string key, TypeG type, object value, bool is_const)
+
+        public LocalDeclarationTable()
         {
-            this.key = key;
-            this.type = type;
-            this.value = value;
-            this.is_const = is_const;
+        }
+
+        //-----------------------------------------------------------
+        public override string ToString()
+        {
+            var sb = new StringBuilder();
+            sb.Append("Local Declaration Table " + "\n");
+            sb.Append("====================\n");
+            foreach (var entry in data)
+            {
+                sb.Append(String.Format("[{0} {1} {2} {3} {4} {5}]\n",
+                                        entry.Key,
+                                        entry.Value.type,
+                                        entry.Value.kind,
+                                        entry.Value.value,
+                                        entry.Value.pos,
+                                        entry.Value.is_const
+
+                                        //Add(entry.Value)
+                                        ));
+            }
+            sb.Append("====================\n");
+            return sb.ToString();
+        }
+
+        /*public string Add(ArrayList values) {
+            var sb = new StringBuilder();
+            foreach (var v in values) {
+                
+            }
+           return sb.ToString();
+
+        }*/
+
+        //-----------------------------------------------------------
+        //public TypeG this[string key] {
+        public LocalDeclarationType this[string key]
+        {
+            get
+            {
+                return data[key];
+            }
+            set
+            {
+                data[key] = value;
+            }
+        }
+
+        //-----------------------------------------------------------
+        public bool Contains(string key)
+        {
+            return data.ContainsKey(key);
+        }
+
+        //-----------------------------------------------------------
+        //public IEnumerator<KeyValuePair<string, TypeG>> GetEnumerator() {
+        public IEnumerator<KeyValuePair<string, LocalDeclarationType>> GetEnumerator()
+        {
+            return data.GetEnumerator();
+        }
+
+        //-----------------------------------------------------------
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        {
+            Console.WriteLine("Es un errorrrrrrrrr-------------------------------------------------------------------------");
+            throw new NotImplementedException();
+
         }
     }
-
-
 }
