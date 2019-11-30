@@ -151,7 +151,6 @@ namespace Chimera
         public TypeG Visit(VariableDeclarationList node)
         {
             //Console.WriteLine("Rock"+ node.ToStringTree());
-            //Console.WriteLine("ARBOL\n"+node.ToStringTree()+"PUTO");
             VisitChildren(node);
             //Console.WriteLine("FIN");
             return TypeG.VOID;
@@ -171,7 +170,6 @@ namespace Chimera
         {
             //Console.WriteLine("Rock"+ node.ToStringTree());
             Console.WriteLine("Aqui ando");
-            Console.WriteLine("ARBOL\n" + node.ToStringTree() + "FIN DEL ARBOL");
             var procedureName = node[0].AnchorToken.Lexeme;
             Console.WriteLine("1");
             var variableValue = node[2];
@@ -205,7 +203,6 @@ namespace Chimera
         public TypeG Visit(ParameterDeclarationList node)
         {
             //Console.WriteLine("Rock"+ node.ToStringTree());
-            //Console.WriteLine("ARBOL\n"+node.ToStringTree()+"PUTO");
             VisitChildren(node);
             //Console.WriteLine("FIN");
             return TypeG.VOID;
@@ -214,7 +211,7 @@ namespace Chimera
         public TypeG Visit(ParameterDeclaration node)
         {
             //Console.WriteLine("Rock"+ node.ToStringTree());
-            //Console.WriteLine("ARBOL\n"+node.ToStringTree()+"PUTO");
+            Console.WriteLine("ARBOL\n"+node.ToStringTree()+"FIN");
             VisitChildren(node);
             //Console.WriteLine("FIN");
             return TypeG.VOID;
@@ -223,7 +220,6 @@ namespace Chimera
         public TypeG Visit(StatementList node)
         {
             //Console.WriteLine("Rock"+ node.ToStringTree());
-            //.WriteLine("ARBOL\n"+node.ToStringTree()+"PUTO");
             VisitChildren(node);
             //Console.WriteLine("FIN");
             return TypeG.VOID;
@@ -232,7 +228,23 @@ namespace Chimera
         public TypeG Visit(CallStatement node)
         {
             //Console.WriteLine("Rock"+ node.ToStringTree());
-            //Console.WriteLine("ARBOL\n"+node.ToStringTree()+"PUTO");
+            VisitChildren(node);
+            //Console.WriteLine("FIN");
+            return TypeG.VOID;
+        }
+
+        public TypeG Visit(Type node)
+        {
+            //Console.WriteLine("Rock"+ node.ToStringTree());
+            //Console.WriteLine("TIPOOOO");
+            VisitChildren(node);
+            //Console.WriteLine("FIN");
+            return TypeG.VOID;
+        }
+
+        public TypeG Visit(IdentifierList node)
+        {
+            //Console.WriteLine("Rock"+ node.ToStringTree());
             VisitChildren(node);
             //Console.WriteLine("FIN");
             return TypeG.VOID;

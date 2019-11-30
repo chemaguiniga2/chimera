@@ -355,8 +355,15 @@ namespace Chimera
 
         public Node ParameterDeclaration()
         {
-            var idToken = Expect(TokenCategory.IDENTIFIER);
+            Node idToken = new Identifier()
+            {
+                AnchorToken = Expect(TokenCategory.IDENTIFIER)
+
+            };
+
             var paramList = new IdentifierList();
+
+            paramList.Add(idToken);
             while (CurrentToken == TokenCategory.COMMA)
             {
                 paramList.Add(new Identifier()
@@ -377,7 +384,7 @@ namespace Chimera
 
             Expect(TokenCategory.ENDLINE);
             var result = new ParameterDeclaration() { paramList };
-            result.AnchorToken = idToken;
+            result.AnchorToken = idToken.AnchorToken;
             return result;
         }
 
