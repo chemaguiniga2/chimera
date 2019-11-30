@@ -16,14 +16,16 @@ namespace Chimera
         public object value;
         public int pos;
         public TypeG kind;
+        public string procedure;
 
-        public LocalDeclarationType(string key, TypeG type, object value, int pos, TypeG kind)
+        public LocalDeclarationType(string key, TypeG type, object value, int pos, TypeG kind, string procedure)
         {
             this.key = key;
             this.type = type;
             this.value = value;
             this.pos = pos;
             this.kind = kind;
+            this.procedure = procedure;
 
         }
     }

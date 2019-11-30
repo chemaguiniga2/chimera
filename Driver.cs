@@ -126,6 +126,8 @@ namespace Chimera
                 Console.WriteLine();
                 // mi solución
                 Console.WriteLine(semantic.GloabalDeclaratonT);
+                Console.WriteLine(semantic.LocalDeclarationT);
+                Console.WriteLine(semantic.ProcedureDeclarationT);
 
             }
             catch (Exception e)

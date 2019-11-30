@@ -37,7 +37,7 @@ namespace Chimera
         public static class CurrentContext
         {
             public static string context { get; set; }
-            public static LocalDeclarationTable lc { get; set; } 
+            public static string procedure { get; set; } 
         }
 
         /*public class ContextSwapper
@@ -120,7 +120,8 @@ namespace Chimera
         //-----------------------------------------------------------
         public TypeG Visit(Program node)
         {
-            //fillDefineProcedure();
+
+            Console.WriteLine(node.ToStringTree());
             CurrentContext.context = "GLOBAL";
             Console.WriteLine(node[0]);
             Visit((dynamic)node[0]);
@@ -131,18 +132,12 @@ namespace Chimera
             return TypeG.VOID;
         }
 
-        // Buttercup
-
-        //-----------------------------------------------------------
         public TypeG Visit(ConstantDeclarationList node)
         {
-            Console.WriteLine(node.ToStringTree());
             VisitChildren(node);
-            //Console.WriteLine("FIN");
             return TypeG.VOID;
         }
 
-        //-VAR
         public TypeG Visit(ConstantDeclaration node)
         {
             var variableName = node.AnchorToken.Lexeme;
@@ -160,20 +155,15 @@ namespace Chimera
                 if (CurrentContext.context == "LOCAL")
                 {
                     LocalDeclarationT[variableName] =
-                        new LocalDeclarationType(variableName, TypeG.INTEGER, variableValue, 3, TypeG.CONST);
+                        new LocalDeclarationType(variableName, TypeG.INTEGER, variableValue, 3, TypeG.CONST, CurrentContext.procedure);
                 }
                 else
                 {
                     GloabalDeclaratonT[variableName] =
                         new GlobalDeclarationType(variableName, TypeG.CONST, variableValue, true);
-
-                    // para tener dos constates
-                    //GloabalDeclaratonT["otroo"] = new GlobalDeclarationType("es prueba", TypeG.CONST, 5, true);
-
                 }
 
             }
-
             return TypeG.VOID;
         }
 
@@ -181,7 +171,6 @@ namespace Chimera
         {
             var variableName = node.AnchorToken.Lexeme;
             var variableValue = node.AnchorToken.Lexeme;
-
             try
             {
                 variableValue = node[0].AnchorToken.Lexeme;
@@ -226,7 +215,7 @@ namespace Chimera
                 if (CurrentContext.context == "LOCAL")
                 {
                     LocalDeclarationT[variableName] =
-                        new LocalDeclarationType(variableName, type, variableValue, 1, TypeG.VAR);
+                        new LocalDeclarationType(variableName, type, variableValue, 1, TypeG.VAR, CurrentContext.procedure);
                 }
                 else
                 {
@@ -251,19 +240,14 @@ namespace Chimera
 
         public TypeG Visit(VariableDeclarationList node)
         {
-            //Console.WriteLine("Rock"+ node.ToStringTree());
             VisitChildren(node);
-            //Console.WriteLine("FIN");
             return TypeG.VOID;
         }
 
 
         public TypeG Visit(ProcedureDeclarationList node)
         {
-            //Console.WriteLine("Rock"+ node.ToStringTree());
-
             VisitChildren(node);
-            //Console.WriteLine("FIN");
             return TypeG.VOID;
         }
 
@@ -272,7 +256,9 @@ namespace Chimera
             Console.WriteLine("tree"+ node.ToStringTree());
             Console.WriteLine("Aqui ando");
             CurrentContext.context = "LOCAL";
+
             var procedureName = node[0].AnchorToken.Lexeme;
+            CurrentContext.procedure = procedureName;
             Console.WriteLine("1");
             var variableValue = node[2];
             Console.WriteLine("2" + variableValue);
@@ -283,38 +269,28 @@ namespace Chimera
                 throw new SemanticError(
                     "Duplicated variable: " + procedureName,
                     node[0].AnchorToken);
-
             }
             else
             {
                 ProcedureDeclarationT[procedureName] =
                     new ProcedureDeclarationType(procedureName, TypeG.VOID, false, LocalDeclarationT);
-
-                // para tener dos constates
-                //ProcedureDeclarationT["otroo"] = new ProcedureDeclarationType("es prueba", TypeG.CONST, 5, true);
-
             }
 
-            //return TypeG.VOID;
-            Console.WriteLine("Visitando hijos");
             VisitChildren(node);
             CurrentContext.context = "GLOBAL";
-            //Console.WriteLine("FIN");
             return TypeG.VOID;
         }
 
         public TypeG Visit(ParameterDeclarationList node)
         {
-            //Console.WriteLine("Rock"+ node.ToStringTree());
             VisitChildren(node);
-            //Console.WriteLine("FIN");
             return TypeG.VOID;
         }
 
         public TypeG Visit(ParameterDeclaration node)
         {
             //Console.WriteLine("Rock"+ node.ToStringTree());
-            Console.WriteLine("ARBOL\n"+node.ToStringTree()+"FIN");
+            //Console.WriteLine("ARBOL\n"+node.ToStringTree()+"FIN");
             VisitChildren(node);
             //Console.WriteLine("FIN");
             return TypeG.VOID;
