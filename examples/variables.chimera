@@ -7,7 +7,7 @@ const
     konstant := 1;
 
 var
-    x, y: integer;
+    x, y, a, b, c, d: integer;
 
 procedure F(
         b: boolean;
