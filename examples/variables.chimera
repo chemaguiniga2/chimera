@@ -9,7 +9,8 @@ const
 var
     x, y, a, b, c, d: integer;
 
-procedure F() : string ;
+procedure F(     n: integer;
+    ): integer;
 
     const
         konstant := 1000;

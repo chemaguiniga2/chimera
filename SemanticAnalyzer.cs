@@ -161,7 +161,7 @@ namespace Chimera
         public TypeG Visit(ProcedureDeclarationList node)
         {
             //Console.WriteLine("Rock"+ node.ToStringTree());
-            Console.WriteLine("ARBOL\n" + node.ToStringTree() + "FIN DEL ARBOL");
+
             VisitChildren(node);
             //Console.WriteLine("FIN");
             return TypeG.VOID;
@@ -170,9 +170,14 @@ namespace Chimera
         public TypeG Visit(ProcedureDeclaration node)
         {
             //Console.WriteLine("Rock"+ node.ToStringTree());
-            //Console.WriteLine("ARBOL\n"+node.ToStringTree()+"PUTO");
+            Console.WriteLine("Aqui ando");
+            Console.WriteLine("ARBOL\n" + node.ToStringTree() + "FIN DEL ARBOL");
             var procedureName = node[0].AnchorToken.Lexeme;
-            var variableValue = node[2].AnchorToken.Lexeme;
+            Console.WriteLine("1");
+            var variableValue = node[2];
+            Console.WriteLine("2" + variableValue);
+
+
             if (ProcedureDeclarationT.Contains(procedureName))
             {
                 throw new SemanticError(
@@ -191,6 +196,7 @@ namespace Chimera
             }
 
             //return TypeG.VOID;
+            Console.WriteLine("Visitando hijos");
             VisitChildren(node);
             //Console.WriteLine("FIN");
             return TypeG.VOID;
@@ -236,9 +242,16 @@ namespace Chimera
         public TypeG Visit(Identifier node)
         {
             var variableName = node.AnchorToken.Lexeme;
-            Console.WriteLine("Casi");
-            Console.WriteLine("INSIDE" + node[0]);
-            var variableValue = node[0].AnchorToken.Lexeme;
+            //Console.WriteLine("Casi");
+            //Console.WriteLine("INSIDE" + node[0]);
+            var variableValue = node.AnchorToken.Lexeme;
+            try
+            {
+                variableValue = node[0].AnchorToken.Lexeme;
+            } catch (ArgumentOutOfRangeException e) {
+                return TypeG.VOID;
+            }
+
             var is_const = true;
             /*if (True) {
                 
@@ -286,7 +299,7 @@ namespace Chimera
             Console.WriteLine("FOR EACH " + node.getLength());
             foreach (var n in node)
             {
-                Console.WriteLine("TIPO" + node[node.getLength() - 1]);
+                Console.WriteLine("TIPO" + n);
                 Visit((dynamic)n);
             }
             Console.WriteLine("FIN DEL CICLO");
