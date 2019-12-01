@@ -40,6 +40,7 @@ namespace Chimera
         {
             public static string context { get; set; }
             public static string procedure { get; set; } 
+            public static Boolean paramDetect { get; set; }
             public static int cantparam { get; set; } 
             public static int param { get; set; } 
         }
@@ -147,6 +148,7 @@ namespace Chimera
             //
             //Console.WriteLine(node.ToStringTree());
             CurrentContext.context = "GLOBAL";
+            CurrentContext.paramDetect = false;
             //
             //Console.WriteLine(node[0]);
             Visit((dynamic)node[0]);
@@ -238,7 +240,14 @@ namespace Chimera
                 return TypeG.VOID;
             }
             TypeG type = TypeG.VAR;
+            TypeG kind = TypeG.VAR;
             var is_const = true;
+            if (CurrentContext.paramDetect == true)
+            {
+                Console.WriteLine("CAMBIEEEEE A PARAM!!");
+                kind = TypeG.PARAM;
+            }
+
 
             if (node[0].AnchorToken.Lexeme == "integer")
             {
@@ -272,7 +281,7 @@ namespace Chimera
                 else
                 {
                     GloabalDeclaratonT[variableName] =
-                        new GlobalDeclarationType(variableName, type, variableValue, TypeG.VAR);
+                        new GlobalDeclarationType(variableName, type, variableValue, kind);
                 }
             }            
             
@@ -292,28 +301,28 @@ namespace Chimera
                                 LocalDeclarationTable d = ListLocalDeclarationTable[ListLocalDeclarationTable.Count - 1];
                                 if(CurrentContext.cantparam > 0){
                                         d[variableName] = 
-                                        new LocalDeclarationType(variableName, type, variableValue, CurrentContext.param , TypeG.PARAM); 
+                                        new LocalDeclarationType(variableName, type, variableValue, CurrentContext.param , kind); 
                                         CurrentContext.cantparam --;
                                         CurrentContext.param ++;      
 
                                     }
                                     else{
                                         d[variableName] = 
-                                        new LocalDeclarationType(variableName, type, variableValue, -1, TypeG.VAR); 
+                                        new LocalDeclarationType(variableName, type, variableValue, -1, kind); 
                                     }
                             }
                             else{                                
                                 LocalDeclarationTable d = new LocalDeclarationTable();
                                     if(CurrentContext.cantparam > 0){
                                         d[variableName] = 
-                                        new LocalDeclarationType(variableName, type, variableValue, CurrentContext.param , TypeG.PARAM); 
+                                        new LocalDeclarationType(variableName, type, variableValue, CurrentContext.param , kind); 
                                         CurrentContext.cantparam --;
                                         CurrentContext.param ++;      
 
                                     }
                                     else{
                                         d[variableName] = 
-                                        new LocalDeclarationType(variableName, type, variableValue, -1, TypeG.VAR); 
+                                        new LocalDeclarationType(variableName, type, variableValue, -1, kind); 
                                     }                             
                                     ListLocalDeclarationTable.Add(d);
                                 ListLocalDeclarationTable[ListLocalDeclarationTable.Count - 1].tableID = CurrentContext.procedure;
@@ -325,14 +334,14 @@ namespace Chimera
                         LocalDeclarationTable d = new LocalDeclarationTable();
                             if(CurrentContext.cantparam > 0){
                                         d[variableName] = 
-                                        new LocalDeclarationType(variableName, type, variableValue, CurrentContext.param , TypeG.PARAM); 
+                                        new LocalDeclarationType(variableName, type, variableValue, CurrentContext.param , kind); 
                                         CurrentContext.cantparam --;
                                         CurrentContext.param ++;      
 
                                     }
                                     else{
                                         d[variableName] = 
-                                        new LocalDeclarationType(variableName, type, variableValue, -1, TypeG.VAR); 
+                                        new LocalDeclarationType(variableName, type, variableValue, -1, kind); 
                                     }                              
                             ListLocalDeclarationTable.Add(d);
                         ListLocalDeclarationTable[0].tableID = CurrentContext.procedure;
@@ -415,12 +424,14 @@ namespace Chimera
 
         public TypeG Visit(ParameterDeclarationList node)
         {
-            CurrentContext.cantparam = node.getLength();
+
+            CurrentContext.paramDetect = true;
             Console.WriteLine("***************** CurrentContext.cantparam " + CurrentContext.cantparam);
             //Console.WriteLine("***************** node 0 " + node[0]);
             //Console.WriteLine("***************** node 1" + node[1]);
             CurrentContext.param = 0;
             VisitChildren(node);
+            CurrentContext.paramDetect = false;
             return TypeG.VOID;
         }
 

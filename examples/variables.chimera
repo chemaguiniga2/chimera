@@ -13,6 +13,7 @@ var
     x, y, a, b, c, d: integer;
 
 procedure F( n, p : integer;
+			t, w : string;
     ): integer;
 
     const

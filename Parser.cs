@@ -306,10 +306,30 @@ namespace Chimera
             var statement = new StatementList();
 
             Expect(TokenCategory.INITPARENTHESIS);
+            /*
+
+
+
+            while (CurrentToken == TokenCategory.COMMA)
+            {
+                Expect(TokenCategory.COMMA);
+                paramList.Add(new Identifier()
+                {
+                    AnchorToken = Expect(TokenCategory.IDENTIFIER)
+
+                });
+            }
+
+            */
+
             while (CurrentToken == TokenCategory.IDENTIFIER)
             {
                 parDecList.Add(ParameterDeclaration());
+
+
             }
+
+
             Expect(TokenCategory.CLOSINGPARENTHESIS);
             if (CurrentToken == TokenCategory.DECLARATION)
             {
@@ -378,6 +398,8 @@ namespace Chimera
             var paramList = new IdentifierList();
 
             paramList.Add(idToken);
+
+            
             while (CurrentToken == TokenCategory.COMMA)
             {
                 Expect(TokenCategory.COMMA);
@@ -387,6 +409,8 @@ namespace Chimera
 
                 });
             }
+            
+
 
             Expect(TokenCategory.DECLARATION);
             var tipo = Type();
@@ -399,8 +423,8 @@ namespace Chimera
 
             Expect(TokenCategory.ENDLINE);
             var result = new ParameterDeclaration() { paramList };
-            result.AnchorToken = idToken.AnchorToken;
-            return result;
+            //result.AnchorToken = idToken.AnchorToken;
+            return paramList;
         }
 
         public Node List()
