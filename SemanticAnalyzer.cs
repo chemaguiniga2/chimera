@@ -258,7 +258,7 @@ namespace Chimera
             }
             else if (node[0].AnchorToken.Lexeme == "string")
             {
-                variableValue = "";
+                variableValue = "''";
                 is_const = false;
                 type = TypeG.STRING;
             }
@@ -426,10 +426,22 @@ namespace Chimera
         {
 
             CurrentContext.paramDetect = true;
+
             Console.WriteLine("***************** CurrentContext.cantparam " + CurrentContext.cantparam);
-            //Console.WriteLine("***************** node 0 " + node[0]);
-            //Console.WriteLine("***************** node 1" + node[1]);
+            Console.WriteLine("***************** node " + node);
+            Console.WriteLine("***************** node tam" + node.getLength());
+            var totalParam = 0;
+            if(node.getLength() > 0){
+                Console.WriteLine("***************** node[0] tam" + node[0].getLength());
+                foreach (var child in node)
+                {
+                    totalParam += child.getLength();
+                }
+            }
+            
+            CurrentContext.cantparam = totalParam;
             CurrentContext.param = 0;
+            Console.WriteLine("////////////////// CurrentContext.cantparam " + CurrentContext.cantparam);
             VisitChildren(node);
             CurrentContext.paramDetect = false;
             return TypeG.VOID;
