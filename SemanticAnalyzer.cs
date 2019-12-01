@@ -273,7 +273,7 @@ namespace Chimera
             else
             {
                 ProcedureDeclarationT[procedureName] =
-                    new ProcedureDeclarationType(procedureName, TypeG.VOID, false, LocalDeclarationT);
+                    new ProcedureDeclarationType(procedureName, TypeG.VOID, false);
             }
 
             VisitChildren(node);

@@ -31,12 +31,13 @@ namespace Chimera
             sb.Append("====================\n");
             foreach (var entry in data)
             {
-                sb.Append(String.Format("[{0} {1} {2} {3} {4}]\n",
+                sb.Append(String.Format("[{0} {1} {2} {3} {4} {5}]\n",
                                         entry.Key,
                                         entry.Value.type,
                                         entry.Value.value,
                                         entry.Value.pos,
-                                        entry.Value.kind
+                                        entry.Value.kind,
+                                        entry.Value.procedure
 
                                         //Add(entry.Value)
                                         ));

@@ -31,11 +31,10 @@ namespace Chimera
             sb.Append("====================\n");
             foreach (var entry in data)
             {
-                sb.Append(String.Format("[{0} {1} {2} {3}]\n",
+                sb.Append(String.Format("[{0} {1} {2}]\n",
                                         entry.Key,
                                         entry.Value.return_type,
-                                        entry.Value.is_predef,
-                                        entry.Value.dec_table
+                                        entry.Value.is_predef
 
                                         //Add(entry.Value)
                                         ));
