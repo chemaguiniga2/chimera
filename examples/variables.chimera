@@ -5,18 +5,25 @@
 
 const
     konstant := 1;
+    k := 1;
+    
+    
 
 var
     x, y, a, b, c, d: integer;
 
-procedure F(     n: integer;
+procedure F( n, p : integer;
     ): integer;
 
     const
-        konstant := 1000;
+        kons := 1;   
+        k := 1; 
+
 
     var
         x: integer;
+        d: integer;
+        y: string;
 
     begin
         WrBool(b);

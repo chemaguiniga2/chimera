@@ -1,7 +1,7 @@
 /*
 Dachely Otero Argote            A01377812
-José María Aguíñiga Díaz        A01376669 
-José Rodrigo Narváez Berlanga   A01377566
+Josï¿½ Marï¿½a Aguï¿½ï¿½iga Dï¿½az        A01376669 
+Josï¿½ Rodrigo Narvï¿½ez Berlanga   A01377566
  */
 
 using System;
@@ -17,7 +17,7 @@ namespace Chimera
 
         IDictionary<string, LocalDeclarationType> data = new SortedDictionary<string, LocalDeclarationType>();
         // IDictionary<string, TypeG> data = new SortedDictionary<string, TypeG>();
-
+        public string tableID = "DD";
 
         public LocalDeclarationTable()
         {
@@ -27,17 +27,16 @@ namespace Chimera
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append("Local Declaration Table " + "\n");
+            sb.Append("Local Declaration Table " + tableID + "\n");
             sb.Append("====================\n");
             foreach (var entry in data)
             {
-                sb.Append(String.Format("[{0} {1} {2} {3} {4} {5}]\n",
+                sb.Append(String.Format("[{0} {1} {2} {3} {4}]\n",
                                         entry.Key,
                                         entry.Value.type,
                                         entry.Value.value,
                                         entry.Value.pos,
-                                        entry.Value.kind,
-                                        entry.Value.procedure
+                                        entry.Value.kind
 
                                         //Add(entry.Value)
                                         ));

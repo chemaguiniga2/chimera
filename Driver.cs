@@ -116,17 +116,13 @@ namespace Chimera
 
                 Console.WriteLine("Semantics OK.");
                 Console.WriteLine();
-                //solucion profe
-                Console.WriteLine("Global Declaration Table");
-                Console.WriteLine("============");
-                foreach (var entry in semantic.GloabalDeclaratonT) {
-                    Console.WriteLine(entry);  
-                                                         
-                }
-                Console.WriteLine();
+
                 // mi solución
                 Console.WriteLine(semantic.GloabalDeclaratonT);
-                Console.WriteLine(semantic.LocalDeclarationT);
+                //Console.WriteLine(semantic.LocalDeclarationT);
+                foreach (var entry in semantic.ListLocalDeclarationTable) {
+                    Console.WriteLine(entry);                                                          
+                }
                 Console.WriteLine(semantic.ProcedureDeclarationT);
 
             }

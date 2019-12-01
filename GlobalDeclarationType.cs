@@ -13,13 +13,13 @@ namespace Chimera {
         public  string key;
         public  TypeG type;
         public  object value;
-        public  bool is_const;
+        public  TypeG kind;
 
-        public GlobalDeclarationType (string key, TypeG type, object value, bool is_const){
+        public GlobalDeclarationType (string key, TypeG type, object value,TypeG kind){
             this.key = key;
             this.type = type;
             this.value = value;
-            this.is_const = is_const;
+            this.kind = kind;
         }
     }
 

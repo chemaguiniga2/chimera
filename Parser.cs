@@ -143,14 +143,28 @@ namespace Chimera
 
         public Node ConstantDeclaration()
         {
-            Expect(TokenCategory.CONST);
+            /*Expect(TokenCategory.CONST);
             var idToken = Expect(TokenCategory.IDENTIFIER);
             Expect(TokenCategory.CONSTANTDECLARATION);
             var lit = Literal();
             Expect(TokenCategory.ENDLINE);
             var result = new ConstantDeclaration() { lit };
             result.AnchorToken = idToken;
-            return result;
+            return result;*/
+
+            var constDeclaratList = new ConstantDeclarationList();
+            constDeclaratList.AnchorToken = Expect(TokenCategory.CONST);
+            do{
+                var idToken = Expect(TokenCategory.IDENTIFIER);
+                Expect(TokenCategory.CONSTANTDECLARATION);
+                var lit = Literal();
+                Expect(TokenCategory.ENDLINE);
+                var result = new ConstantDeclaration() { lit };
+                result.AnchorToken = idToken;
+                constDeclaratList.Add(result);
+            }while(CurrentToken == TokenCategory.IDENTIFIER);
+            
+            return constDeclaratList;
         }
 
         public Node VariableDeclaration()
@@ -366,6 +380,7 @@ namespace Chimera
             paramList.Add(idToken);
             while (CurrentToken == TokenCategory.COMMA)
             {
+                Expect(TokenCategory.COMMA);
                 paramList.Add(new Identifier()
                 {
                     AnchorToken = Expect(TokenCategory.IDENTIFIER)

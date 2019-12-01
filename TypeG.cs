@@ -16,6 +16,8 @@ namespace Chimera {
         VOID,
         LIST_OF_INTEGER,
         CONST,
+        PARAM,
+        LIST,
         VAR
     }
 }

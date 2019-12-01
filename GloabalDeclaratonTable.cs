@@ -30,7 +30,7 @@ public class GloabalDeclaratonTable: IEnumerable<KeyValuePair<string, GlobalDecl
                                         entry.Key, 
                                         entry.Value.type,
                                         entry.Value.value,
-                                        entry.Value.is_const
+                                        entry.Value.kind
 
                                         //Add(entry.Value)
                                         ));
