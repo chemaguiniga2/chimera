@@ -175,7 +175,6 @@ namespace Chimera
 
         public Node VariableDeclaration()
         {
-            var i = 0;
             var declarationList = new VariableDeclarationList();
             declarationList.AnchorToken = Expect(TokenCategory.VAR);
             do
@@ -199,18 +198,13 @@ namespace Chimera
                 }
                 Expect(TokenCategory.DECLARATION);
                 var tipo = Type();
+                Console.WriteLine("PERIQUEAR"+tipo);
             //declarationList.Add(Type());
                 foreach (var node in tempList)
                 {
-                    declarationList.Add(tipo);
-                    
+                    tipo.Add(node);
                 }
-
-                foreach (var nodo in tempList)
-                {
-                    declarationList[i].Add(nodo);
-                    i++;
-                }
+                declarationList.Add(tipo);
                 Expect(TokenCategory.ENDLINE);
 
             } while (CurrentToken == TokenCategory.IDENTIFIER);
@@ -332,6 +326,8 @@ namespace Chimera
             var consDecList = new ConstantDeclarationList();
             var statement = new StatementList();
 
+
+
             Expect(TokenCategory.INITPARENTHESIS);
 
             if (CurrentToken == TokenCategory.IDENTIFIER)
@@ -391,18 +387,19 @@ namespace Chimera
             var paramList = new ParameterDeclarationList();
             while (CurrentToken == TokenCategory.IDENTIFIER)
             {
+                var tempList = new VariableDeclarationList();
                 Node idToken = new Identifier()
                 {
                     AnchorToken = Expect(TokenCategory.IDENTIFIER)
 
                 };
 
-                paramList.Add(idToken);
+                tempList.Add(idToken);
 
                 while (CurrentToken == TokenCategory.COMMA)
                 {
                     Expect(TokenCategory.COMMA);
-                    paramList.Add(new Identifier()
+                    tempList.Add(new Identifier()
                     {
                         AnchorToken = Expect(TokenCategory.IDENTIFIER)
 
@@ -411,14 +408,11 @@ namespace Chimera
                 Expect(TokenCategory.DECLARATION);
                 var tipo = Type();
                 //declarationList.Add(Type());
-                foreach (var node in paramList)
+                foreach (var node in tempList)
                 {
-                    if (node.getLength()==0) //Only if type hasn't been assigned
-                    {
-                        node.Add(tipo);
-                    }
+                    tipo.Add(node);
                 }
-
+                paramList.Add(tipo);
                 Expect(TokenCategory.ENDLINE);
             }
 

@@ -39,7 +39,8 @@ namespace Chimera
         public static class CurrentContext
         {
             public static string context { get; set; }
-            public static string procedure { get; set; } 
+            //public static int procedure { get; set; }
+            public static string procedure { get; set; }
             public static Boolean paramDetect { get; set; }
             public static int cantparam { get; set; } 
             public static int param { get; set; }
@@ -170,6 +171,7 @@ namespace Chimera
             //
             Console.WriteLine(node.ToStringTree());
             CurrentContext.context = "GLOBAL";
+            //CurrentContext.procedure = 0;
             CurrentContext.paramDetect = false;
             //
             //Console.WriteLine(node[0]);
@@ -471,7 +473,7 @@ namespace Chimera
 
 
             var procedureName = node.AnchorToken.Lexeme;
-            CurrentContext.procedure = procedureName;
+
 
             foreach (var n in node)
             {
@@ -484,7 +486,7 @@ namespace Chimera
             
             ProcedureDeclarationTable pdt = new ProcedureDeclarationTable();
             CurrentContext.current_pdt = pdt;
-            ProcedureDeclarationList.Add(pdt);
+            //ProcedureDeclarationList[CurrentContext.procedure] = pdt;
             VisitChildren(node);
             CurrentContext.context = "GLOBAL";
             return TypeG.VOID;
@@ -526,6 +528,7 @@ namespace Chimera
             VisitChildren(node);
             CurrentContext.context = "GLOBAL";
             return TypeG.VOID;*/
+            //CurrentContext.procedure++;
         }
 
         public TypeG Visit(ParameterDeclarationList node)
