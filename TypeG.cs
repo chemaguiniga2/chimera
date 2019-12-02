@@ -18,6 +18,9 @@ namespace Chimera {
         CONST,
         PARAM,
         LIST,
-        VAR
+        VAR,
+        INTEGER_LIST,
+        STRING_LIST,
+        BOOLEAN_LIST
     }
 }

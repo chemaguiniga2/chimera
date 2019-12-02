@@ -12,8 +12,12 @@ enum TokenCategory {
 	INTEGER,
 	STRING,
 	BOOLEAN,
-	LIST, 
-	OF,
+    LIST,
+    INTEGER_LIST,
+    BOOLEAN_LIST,
+    STRING_LIST,
+    VOID,
+    OF,
 	PROCEDURE, //(FOS creo que no) FOD
 	BEGIN,  //(FOS creo que no)
 	IF, //FOS

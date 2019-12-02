@@ -12,10 +12,10 @@ namespace Chimera {
 
         public  string key;
         public  TypeG type;
-        public  object value;
+        public  dynamic value;
         public  TypeG kind;
 
-        public GlobalDeclarationType (string key, TypeG type, object value,TypeG kind){
+        public GlobalDeclarationType (string key, TypeG type, dynamic value,TypeG kind){
             this.key = key;
             this.type = type;
             this.value = value;

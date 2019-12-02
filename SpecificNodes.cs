@@ -52,6 +52,7 @@ José Rodrigo Narváez Berlanga   A01377566
      class If: Node{}
      class List: Node{}
 
+     class ListTypeNode : Node { }
      class VariableDeclaration: Node{}
      class CallNode: Node{}
      class SimpleLiteral: Node{}

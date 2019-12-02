@@ -13,11 +13,11 @@ namespace Chimera
     {
         public string key;
         public TypeG type;
-        public object value;
+        public dynamic value;
         public int pos;
         public TypeG kind;
 
-        public LocalDeclarationType(string key, TypeG type, object value, int pos, TypeG kind)
+        public LocalDeclarationType(string key, TypeG type, dynamic value, int pos, TypeG kind)
         {
             this.key = key;
             this.type = type;
