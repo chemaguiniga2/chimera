@@ -81,14 +81,14 @@ namespace Chimera {
 			{"div", TokenCategory.DIV},
 			{"rem", TokenCategory.REM},
 			{"not", TokenCategory.NOT},
+			{"IntegerLiteral", TokenCategory.INTEGERLITERAL},
+			{"StringLiteral", TokenCategory.STRINGLITERAL},
+			{"BooleanLiteral", TokenCategory.BOOLEANITERAL},
 
 		};
 
 		static readonly IDictionary<string, TokenCategory> nonKeywords =
 			new Dictionary<string, TokenCategory>() {
-			{"IntegerLiteral", TokenCategory.INTEGERLITERAL},
-			{"StringLiteral", TokenCategory.STRINGLITERAL},
-			{"BooleanLiteral", TokenCategory.STRINGLITERAL},
 			{"EndLine", TokenCategory.ENDLINE},
 			{"ConstantDeclaration", TokenCategory.CONSTANTDECLARATION},
 			{"Comma", TokenCategory.COMMA},

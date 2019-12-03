@@ -248,6 +248,9 @@ namespace Chimera
             {
                 return ListLocalDeclarationTable[CurrentContext.index][variableName].type;
             }
+            else if(GloabalDeclaratonT.Contains(variableName)){
+                return GloabalDeclaratonT[variableName].type;
+            }
 
             throw new SemanticError(
                 "Undeclared variable: " + variableName,

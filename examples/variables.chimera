@@ -17,8 +17,7 @@ procedure F(
     const
         konstant := 1000;
 
-    var
-        x: integer;
+    
 
     begin
         WrBool(b);
