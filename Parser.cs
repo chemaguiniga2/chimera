@@ -470,7 +470,6 @@ namespace Chimera
             switch (CurrentToken)
             {
                 case TokenCategory.IDENTIFIER:
-                    Console.WriteLine("AQUI CACA");
                     return AssignmentCallStatement();
                 case TokenCategory.IF:
                     return If();

@@ -243,7 +243,9 @@ namespace Chimera
         public TypeG Visit(Identifier node)
         {
             var variableName = node.AnchorToken.Lexeme;
-            Console.WriteLine(ListLocalDeclarationTable[CurrentContext.index]);
+            Console.WriteLine(ListLocalDeclarationTable);
+            Console.WriteLine("INDEX:"+CurrentContext.index);
+            
             if (ListLocalDeclarationTable[CurrentContext.index].Contains(variableName))
             {
                 return ListLocalDeclarationTable[CurrentContext.index][variableName].type;
@@ -725,7 +727,7 @@ namespace Chimera
 
         public TypeG Visit(CallNode node)
         {
-            Console.WriteLine("INICIO");
+            Console.WriteLine("INICIO"+node.ToStringTree());
             VisitChildren(node);
             Console.WriteLine("FIN");
             var name = node.AnchorToken.Lexeme;
@@ -820,72 +822,32 @@ namespace Chimera
                     throw new Exception($"Function {name} has no declared call");
             }
 
-            //ListLocalDeclarationTable[CurrentContext.index][variableName] = new LocalDeclarationType(variableName, TypeG.INTEGER, variableValue, -1, TypeG.VAR);
-            Console.WriteLine("QUE PEDO"+node[0]);
-            dynamic tipo = Visit((dynamic)node[0]);
-
-            if (node.getLength() == parametersRequired)
-            {
-                if (typeRequired == tipo)
-                {
-                    return returnType;
+            if (parametersRequired>0) {
+                dynamic tipo = Visit((dynamic)node[0]);
+    
+                if (node.getLength() == parametersRequired){
+                
+                    if (typeRequired == tipo)
+                    {
+                        return returnType;
+                    }
+                    else
+                    {
+                        throw new SemanticError($"No type match for Call: "
+                            + $"expected {typeRequired} but got {tipo}", node.AnchorToken);
+                    }
                 }
                 else
                 {
-                    throw new SemanticError($"No type match for Call: "
-                        + $"expected {typeRequired} but got {tipo}", node.AnchorToken);
+                    throw new SemanticError($"Wrong number of params to procedure call: "
+                        + $"expected {parametersRequired} but got {node.getLength()}", node.AnchorToken);
                 }
             }
-            else
-            {
-                throw new SemanticError($"Wrong number of params to procedure call: "
-                    + $"expected {parametersRequired} but got {node.getLength()}", node.AnchorToken);
-            }
-            
-            
-                    /*
-                    var _params = procedure.symbols.Where(kv => kv.Value.procType == ProcedureType.PARAM)
-                                                .OrderBy(kv => kv.Value.pos)
-                                                .ToList();
-                    if (node.Count() != _params.Count())
-                    {
-                        throw new SemanticError($"Wrong number of params to procedure call: "
-                            + $"expected {_params.Count()} but got {node.Count()}", node.AnchorToken);
-                    }
-                    for (int i = 0; i < _params.Count; ++i)
-                    {
-                        var _node = node[i];
-                        var _param = _params[i];
-                        Type nodeType = Visit((dynamic)_node);
-
-                        bool typesCompatible;
-                        if (nodeType == Type.LIST || _param.Value.type == Type.LIST)
-                        {
-                            Type otherType = nodeType == Type.LIST ? _param.Value.type : nodeType;
-                            var valid = new Type[] { Type.LIST, Type.BOOL_LIST, Type.INT_LIST, Type.STR_LIST };
-                            typesCompatible = valid.Contains(otherType);
-                        }
-                        else
-                        {
-                            typesCompatible = nodeType == _param.Value.type;
-                        }
-
-                        if (!typesCompatible)
-                        {
-                            throw new SemanticError($"Incompatible types {nodeType} and {_param.Value.type} for parameter {_param.Key}",
-                                _node.AnchorToken);
-                        }
-                    }
-                    return procedure.type;
-                }
-                else
-                {
-                    throw new SemanticError($"Undeclared procedure: {name}", node.AnchorToken);
-                }
-            }*/
-                    //-------------------
-                    return TypeG.VOID;
+            return TypeG.VOID;
+        
         }
+        
+        
 
         public TypeG Visit(SubstractOperator node)
         {
