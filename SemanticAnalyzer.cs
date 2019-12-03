@@ -49,17 +49,6 @@ namespace Chimera
             public static LocalDeclarationTable current_ldt { get; set; }
         }
 
-        /*public class ContextSwapper
-        {
-            private void Get()
-            {
-                string getValue = CurrentContext.context;
-            }
-            private void Set(String a)
-            {
-                CurrentContext.context = "new value";
-            }
-        }*/
 
         public GloabalDeclaratonTable GloabalDeclaratonT
         {
@@ -165,6 +154,22 @@ namespace Chimera
             
 
         }
+        /*
+        private dynamic getValue(var tipo)
+        {
+            var value = "";
+            switch (tipo)
+            {
+                case TypeG.INTEGER:
+                    value = 0;
+                    return yeah;
+                default:
+                    throw new Exception($"Function {name} has no declared call");
+            }
+            return value;
+
+
+        }*/
 
         //-----------------------------------------------------------
         public TypeG Visit(Program node)
@@ -477,42 +482,72 @@ namespace Chimera
 
         public TypeG Visit(VariableDeclarationList node)
         {
-            /*
+
             foreach (var n in node)
             {
-                var variableName = n.AnchorToken.Lexeme;
-                var variableValue = n[0].AnchorToken.Lexeme;
-                if (CurrentContext.context == "GLOBAL")
-                {
-                    if (GloabalDeclaratonT.Contains(variableName))
-                    {
-                        throw new SemanticError(
-                        "Duplicated variable (" + CurrentContext.context + "): " + variableName,
-                        node[0].AnchorToken);
-                    }
-                    else
-                    {
-                        GloabalDeclaratonT[variableName] =
-                            new GlobalDeclarationType(variableName, TypeG.INTEGER, variableValue, TypeG.VAR);
-                    }
-                }
-                else if (CurrentContext.context == "LOCAL")
+                TypeG tipo = Visit((dynamic)n);
+                foreach (var i in n)
                 {
 
-                    if (ListLocalDeclarationTable[CurrentContext.index].Contains(variableName))
+                    var variableName = i.AnchorToken.Lexeme;
+                    dynamic variableValue = false;
+
+                    switch (tipo)
                     {
-                        throw new SemanticError(
-                            "Duplicated variable: " + variableName,
+                        case TypeG.BOOLEAN:
+                            variableValue = false;
+                            break;
+                        case TypeG.INTEGER:
+                            variableValue = 0;
+                            break;
+                        case TypeG.STRING:
+                            variableValue = "";
+                            break;
+                        case TypeG.INTEGER_LIST:
+                            variableValue = new int[] { 0 };
+                            break;
+                        case TypeG.BOOLEAN_LIST:
+                            variableValue = new bool[] { false };
+                            break;
+                        case TypeG.STRING_LIST:
+                            variableValue = new string[] { "" };
+                            break;
+                        default:
+                            throw new Exception($"Type {tipo} wasn't found");
+                    }
+
+                    if (CurrentContext.context == "GLOBAL")
+                    {
+                        if (GloabalDeclaratonT.Contains(variableName))
+                        {
+                            throw new SemanticError(
+                            "Duplicated variable (" + CurrentContext.context + "): " + variableName,
                             node[0].AnchorToken);
+                        }
+                        else
+                        {
+                            GloabalDeclaratonT[variableName] =
+                                new GlobalDeclarationType(variableName, TypeG.INTEGER, variableValue, TypeG.VAR);
+                        }
                     }
-                    else
+                    else if (CurrentContext.context == "LOCAL")
                     {
 
-                        ListLocalDeclarationTable[CurrentContext.index][variableName] = new LocalDeclarationType(variableName, TypeG.INTEGER, variableValue, -1, TypeG.VAR);
+                        if (ListLocalDeclarationTable[CurrentContext.index].Contains(variableName))
+                        {
+                            throw new SemanticError(
+                                "Duplicated variable: " + variableName,
+                                node[0].AnchorToken);
+                        }
+                        else
+                        {
+
+                            ListLocalDeclarationTable[CurrentContext.index][variableName] = new LocalDeclarationType(variableName, TypeG.INTEGER, variableValue, -1, TypeG.VAR);
+                        }
                     }
                 }
-            }*/
-            VisitChildren(node);
+            }
+            //VisitChildren(node);
             return TypeG.VOID;
         }
 
