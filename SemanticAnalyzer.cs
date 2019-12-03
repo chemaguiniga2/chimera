@@ -922,6 +922,13 @@ namespace Chimera
         }
 
 
+        public TypeG Visit(Return node)
+        {
+            //Console.WriteLine("INICIO");
+            //VisitChildren(node);
+            //Console.WriteLine("FIN");
+            return Visit((dynamic)node[0]);
+        }
 
         public TypeG Visit(Loop node)
         {
@@ -930,6 +937,8 @@ namespace Chimera
             //Console.WriteLine("FIN");
             return TypeG.VOID;
         }
+
+
         public TypeG Visit(For node)
         {
             Console.WriteLine("FOR: " + node.ToStringTree());
