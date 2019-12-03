@@ -511,7 +511,7 @@ namespace Chimera
                     else
                     {
                         GloabalDeclaratonT[variableName] =
-                            new GlobalDeclarationType(variableName, TypeG.INTEGER, variableValue, TypeG.PARAM);
+                            new GlobalDeclarationType(variableName, tipo, variableValue, TypeG.PARAM);
                     }
                 }
                 else if (CurrentContext.context == "LOCAL")
@@ -525,7 +525,7 @@ namespace Chimera
                     else
                     {
                         Console.WriteLine("GUARDANDO!!!");
-                        ListLocalDeclarationTable[CurrentContext.index][variableName] = new LocalDeclarationType(variableName, TypeG.INTEGER, variableValue, -1, TypeG.PARAM);
+                        ListLocalDeclarationTable[CurrentContext.index][variableName] = new LocalDeclarationType(variableName, tipo, variableValue, -1, TypeG.PARAM);
                         Console.WriteLine("TABLA"+ListLocalDeclarationTable[CurrentContext.index]);
 
 
@@ -821,9 +821,9 @@ namespace Chimera
             }
 
             //ListLocalDeclarationTable[CurrentContext.index][variableName] = new LocalDeclarationType(variableName, TypeG.INTEGER, variableValue, -1, TypeG.VAR);
-
-            dynamic tipo = Visit((dynamic)node[0]);
             Console.WriteLine("QUE PEDO"+node[0]);
+            dynamic tipo = Visit((dynamic)node[0]);
+
             if (node.getLength() == parametersRequired)
             {
                 if (typeRequired == tipo)
@@ -1048,6 +1048,15 @@ namespace Chimera
             return TypeG.BOOLEAN;
             //return TypeG.VOID;
         }
+        
+        public TypeG Visit(InequalOperator node)
+        {
+            Console.WriteLine("Entro LessOrEqualOperator ===================================================");
+            Console.WriteLine("INICIO");
+            VisitBinaryOperator("<>", node, TypeG.INTEGER);
+            return TypeG.BOOLEAN;
+            //return TypeG.VOID;
+        }
 
 
         public TypeG Visit(Type node)
@@ -1089,6 +1098,11 @@ namespace Chimera
 
         public TypeG Visit(FalseLiteral node){
             Console.WriteLine("Entro FalseLiteral ===========================================");
+            VisitChildren(node);
+            return TypeG.VOID;
+        }
+        
+        public TypeG Visit(TrueLiteral node){
             VisitChildren(node);
             return TypeG.VOID;
         }
