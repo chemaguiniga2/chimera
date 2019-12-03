@@ -225,7 +225,6 @@ namespace Chimera
                         node[0].AnchorToken);
                 } else
                 {
-
                     ListLocalDeclarationTable[CurrentContext.index][variableName] = new LocalDeclarationType(variableName, TypeG.INTEGER, variableValue, -1, TypeG.CONST);
                 }
 
@@ -533,6 +532,7 @@ namespace Chimera
             //SE AGREGA TABLA NUEVA AL HACERSE EL NUEVO PROCEDURE
 
             LocalDeclarationTable nuevaTabla = new LocalDeclarationTable();
+            nuevaTabla.tableID = procedureName;
             ListLocalDeclarationTable.Add(nuevaTabla);
 
 
