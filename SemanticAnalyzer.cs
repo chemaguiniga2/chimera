@@ -39,7 +39,8 @@ namespace Chimera
         public static class CurrentContext
         {
             public static string context { get; set; }
-            //public static int procedure { get; set; }
+            public static int index { get; set; }
+            public static int length { get; set; }
             public static string procedure { get; set; }
             public static Boolean paramDetect { get; set; }
             public static int cantparam { get; set; } 
@@ -66,6 +67,18 @@ namespace Chimera
             private set;
         }
 
+        public ProcedureDeclarationTable ProcedureDeclarationT
+        {
+            get;
+            private set;
+        }
+
+        public LocalDeclarationTable LocalDeclarationT
+        {
+            get;
+            private set;
+        }
+
         public List<ProcedureDeclarationTable> ListProcedureDeclarationTable
         {
             get;
@@ -73,19 +86,7 @@ namespace Chimera
         }
 
 
-        public ProcedureDeclarationTable ProcedureDeclarationT
-        {
-            get;
-            private set;
-        }
-
         public List<LocalDeclarationTable> ListLocalDeclarationTable
-        {
-            get;
-            private set;
-        }
-
-        public LocalDeclarationTable LocalDeclarationT
         {
             get;
             private set;
@@ -121,7 +122,6 @@ namespace Chimera
             GloabalDeclaratonT = new GloabalDeclaratonTable();
             ListProcedureDeclarationTable =  new List<ProcedureDeclarationTable>();
 
-            ProcedureDeclarationList = new List<ProcedureDeclarationTable>();
             ProcedureDeclarationT = new ProcedureDeclarationTable();
 
             LocalDeclarationList = new List<LocalDeclarationTable>();
@@ -140,6 +140,8 @@ namespace Chimera
 
             //Input/Output Operations
             ProcedureDeclarationT["WrInt"] = new ProcedureDeclarationType("WrInt", TypeG.VOID, true);
+            
+            
             ProcedureDeclarationT["WrStr"] = new ProcedureDeclarationType("WrStr", TypeG.VOID, true);
             ProcedureDeclarationT["WrBool"] = new ProcedureDeclarationType("WrBool", TypeG.VOID, true);
             ProcedureDeclarationT["WrLn"] = new ProcedureDeclarationType("WrLn", TypeG.VOID, true);
@@ -171,6 +173,8 @@ namespace Chimera
             //
             Console.WriteLine(node.ToStringTree());
             CurrentContext.context = "GLOBAL";
+            CurrentContext.index = 0;
+            CurrentContext.length = 0;
             //CurrentContext.procedure = 0;
             CurrentContext.paramDetect = false;
             //
@@ -199,18 +203,39 @@ namespace Chimera
             var variableValue = node[0].AnchorToken.Lexeme;
             if (CurrentContext.context == "GLOBAL")
             {
-                if(GloabalDeclaratonT.Contains(variableName)){
+                if (GloabalDeclaratonT.Contains(variableName))
+                {
                     throw new SemanticError(
-                    "Duplicated variable ("+CurrentContext.context+"): " + variableName,
+                    "Duplicated variable (" + CurrentContext.context + "): " + variableName,
                     node[0].AnchorToken);
                 }
-                else{
+                else
+                {
                     GloabalDeclaratonT[variableName] =
                         new GlobalDeclarationType(variableName, TypeG.INTEGER, variableValue, TypeG.CONST);
-                }                
+                }
             }
             else if (CurrentContext.context == "LOCAL")
             {
+
+                if (ListLocalDeclarationTable[CurrentContext.index].Contains(variableName))
+                {
+                    throw new SemanticError(
+                        "Duplicated variable: " + variableName,
+                        node[0].AnchorToken);
+                } else
+                {
+
+                    ListLocalDeclarationTable[CurrentContext.index][variableName] = new LocalDeclarationType(variableName, TypeG.INTEGER, variableValue, -1, TypeG.CONST);
+                    //CurrentContext.length++;
+                    //ListLocalDeclarationTable[0].tableID = CurrentContext.procedure;
+                }
+
+
+
+
+
+                /*
                 if(ListLocalDeclarationTable.Count > 0){
                         
                     if (ListLocalDeclarationTable[ListLocalDeclarationTable.Count - 1].Contains(variableName) && ListLocalDeclarationTable[ListLocalDeclarationTable.Count - 1].tableID == CurrentContext.procedure)
@@ -247,14 +272,27 @@ namespace Chimera
                     }
                     /*LocalDeclarationT[variableName] =
                         new LocalDeclarationType(variableName, TypeG.INTEGER, variableValue, 3, TypeG.CONST, CurrentContext.procedure);
-                    */
-                }
-            
+                    
+                }*/
+            }
+
             return TypeG.VOID;
         }
 
         public TypeG Visit(Identifier node)
         {
+            /*var variableName = node.AnchorToken.Lexeme;
+
+            if (ListLocalDeclarationTable[CurrentContext.context].Contains(variableName))
+            {
+                return Local[variableName];
+            }
+
+            throw new SemanticError(
+                "Undeclared variable: " + variableName,
+                node.AnchorToken);
+                */
+
             VisitChildren(node);
             /*
             var variableName = node.AnchorToken.Lexeme;
@@ -269,19 +307,6 @@ namespace Chimera
                 node.AnchorToken);
 
 
-            //var variableName = node.AnchorToken.Lexeme;
-            if (ProcedureDeclarationT.Contains(variableName))
-            {
-                Console.WriteLine("TE ENCONTRE PREDEFINIDO");
-                if (variableName == "LenStr")
-                {
-                    Console.WriteLine("Es un LenStr");
-                }
-
-                return TypeG.INTEGER;
-                //PredefinedProcedure(variableName);
-                //Visit(StandardProcedure node);
-            }
             if (LocalDeclarationT.Contains(variableName))
             {
                 Console.WriteLine(LocalDeclarationT[variableName]);
@@ -470,29 +495,80 @@ namespace Chimera
         {
             
             CurrentContext.context = "LOCAL";
-
-
             var procedureName = node.AnchorToken.Lexeme;
 
+            //SE AGREGA TABLA NUEVA AL HACERSE EL NUEVO PROCEDURE
 
-            foreach (var n in node)
+            LocalDeclarationTable nuevaTabla = new LocalDeclarationTable();
+            ListLocalDeclarationTable.Add(nuevaTabla);
+
+
+            //CurrentContext.length++;
+            if (ProcedureDeclarationT.Contains(procedureName))
             {
-                if (n.ToString().StartsWith("Type"))
+                throw new SemanticError(
+                "Duplicated procedure: " + procedureName,
+                node.AnchorToken);
+            } else
+            {
+                dynamic tipo = TypeG.VOID;
+                foreach (var n in node)
                 {
-                    Console.WriteLine("Has type: "+ n.AnchorToken.Lexeme);
+                    if (n.ToString().StartsWith("Type"))
+                    {
+                        tipo = Visit((dynamic)n);
+                        Console.WriteLine("Has type: "+ tipo);
+                    }
                 }
+
+                ProcedureDeclarationT[procedureName] = new ProcedureDeclarationType(procedureName, tipo, false);
+                Console.WriteLine("NUEVO PROC" + procedureName);
+
             }
 
-            
-            ProcedureDeclarationTable pdt = new ProcedureDeclarationTable();
+            /*
+            if (ProcedureDeclarationList[CurrentContext.procedure].Contains(procedureName))
+            {
+
+            }
+            else
+            {
+                ProcedureDeclarationList[CurrentContext.procedure] =
+                    new ProcedureDeclarationType(procedureName, TypeG.VOID, false);
+            }
+
+            VisitChildren(node);
+            CurrentContext.context = "GLOBAL";
+            return TypeG.VOID;
+            //CurrentContext.procedure+
+
+
+
+
+            if (ProcedureDeclarationT.Contains(procedureName))
+            {
+                throw new SemanticError(
+                    "Duplicated procedure: " + procedureName,
+                    node.AnchorToken);
+            }
+            else
+            {
+
+                ProcedureDeclarationList[CurrentContext.procedure] =
+                       new ProcedureDeclarationType(procedureName, TypeG.VOID, false);
+                ProcedureDeclarationT.a
+            }
+
             CurrentContext.current_pdt = pdt;
             //ProcedureDeclarationList[CurrentContext.procedure] = pdt;
             VisitChildren(node);
             CurrentContext.context = "GLOBAL";
             return TypeG.VOID;
 
-            /*
-            else
+            if (ProcedureDeclarationList.Contains(pdt))
+            {
+                Console.WriteLine("Hola");
+            } else
             {
                 LocalDeclarationTable d = new LocalDeclarationTable();
                 if (CurrentContext.cantparam > 0)
@@ -524,10 +600,13 @@ namespace Chimera
                     ProcedureDeclarationList[CurrentContext.procedure] =
                         new ProcedureDeclarationType(procedureName, TypeG.VOID, false);
                 }
-
+                */
             VisitChildren(node);
             CurrentContext.context = "GLOBAL";
-            return TypeG.VOID;*/
+            CurrentContext.index++;
+
+
+            return TypeG.VOID;
             //CurrentContext.procedure++;
         }
 
@@ -582,6 +661,7 @@ namespace Chimera
             return TypeG.VOID;
         }
 
+        /*
         public TypeG Visit(Type node)
         {
             //Console.WriteLine("Rock"+ node.ToStringTree());
@@ -590,7 +670,7 @@ namespace Chimera
             //Console.WriteLine("FIN");
             return TypeG.VOID;
         }
-
+        */
 
         /* ---------- Pending -------- */
         public TypeG Visit(Expression node)
@@ -660,6 +740,129 @@ namespace Chimera
             Console.WriteLine("INICIO");
             VisitChildren(node);
             Console.WriteLine("FIN");
+            var name = node.AnchorToken.Lexeme;
+            var parametersRequired = 0;
+            TypeG typeRequired = TypeG.VOID;
+            TypeG typeRequired2 = TypeG.VOID;
+            switch (name)
+            {
+                case "WrInt":
+                    parametersRequired = 1;
+                    typeRequired = TypeG.INTEGER;
+                    break;
+                case "WrStr":
+                    parametersRequired = 1;
+                    typeRequired = TypeG.STRING;
+                    break;
+                case "WrLn":
+                    break;
+                case "RdInt":
+                    break;
+                case "RdStr":
+                    break;
+                case "AtStr":
+                    parametersRequired = 2;
+                    typeRequired = TypeG.STRING;
+                    typeRequired2 = TypeG.INTEGER;
+                    break;
+                case "LenStr":
+                    parametersRequired = 1;
+                    typeRequired = TypeG.STRING;
+                    break;
+                case "CmpStr":
+                    parametersRequired = 2;
+                    typeRequired = TypeG.STRING;
+                    typeRequired2 = TypeG.STRING;
+                    break;
+                case "CatStr":
+                    parametersRequired = 2;
+                    typeRequired = TypeG.STRING;
+                    typeRequired2 = TypeG.STRING;
+                    break;
+
+                case "LenLstInt":
+                    parametersRequired = 1;
+                    typeRequired = TypeG.INTEGER_LIST;
+                    break;
+                case "LenLstStr":
+                    parametersRequired = 1;
+                    typeRequired = TypeG.STRING_LIST;
+                    break;
+                case "LenLstBool":
+                    parametersRequired = 1;
+                    typeRequired = TypeG.BOOLEAN_LIST;
+                    break;
+
+                case "NewLstInt":
+                    parametersRequired = 1;
+                    typeRequired = TypeG.INTEGER;
+                    break;
+                case "NewLstStr":
+                    parametersRequired = 1;
+                    typeRequired = TypeG.INTEGER;
+                    break;
+                case "NewLstBool":
+                    parametersRequired = 1;
+                    typeRequired = TypeG.INTEGER;
+                    break;
+                case "IntToStr":
+                    parametersRequired = 1;
+                    typeRequired = TypeG.INTEGER;
+                    break;
+                case "StrToInt":
+                    parametersRequired = 1;
+                    typeRequired = TypeG.STRING;
+                    break;
+                default:
+                    throw new Exception($"Function {name} has no declared call");
+            }
+            /*
+            if (node.getLength() == parametersRequired)
+            {
+
+            }*/
+
+                /*
+                var _params = procedure.symbols.Where(kv => kv.Value.procType == ProcedureType.PARAM)
+                                            .OrderBy(kv => kv.Value.pos)
+                                            .ToList();
+                if (node.Count() != _params.Count())
+                {
+                    throw new SemanticError($"Wrong number of params to procedure call: "
+                        + $"expected {_params.Count()} but got {node.Count()}", node.AnchorToken);
+                }
+                for (int i = 0; i < _params.Count; ++i)
+                {
+                    var _node = node[i];
+                    var _param = _params[i];
+                    Type nodeType = Visit((dynamic)_node);
+
+                    bool typesCompatible;
+                    if (nodeType == Type.LIST || _param.Value.type == Type.LIST)
+                    {
+                        Type otherType = nodeType == Type.LIST ? _param.Value.type : nodeType;
+                        var valid = new Type[] { Type.LIST, Type.BOOL_LIST, Type.INT_LIST, Type.STR_LIST };
+                        typesCompatible = valid.Contains(otherType);
+                    }
+                    else
+                    {
+                        typesCompatible = nodeType == _param.Value.type;
+                    }
+
+                    if (!typesCompatible)
+                    {
+                        throw new SemanticError($"Incompatible types {nodeType} and {_param.Value.type} for parameter {_param.Key}",
+                            _node.AnchorToken);
+                    }
+                }
+                return procedure.type;
+            }
+            else
+            {
+                throw new SemanticError($"Undeclared procedure: {name}", node.AnchorToken);
+            }
+        }*/
+        //-------------------
             return TypeG.VOID;
         }
 
@@ -787,6 +990,44 @@ namespace Chimera
             VisitBinaryOperator('<', node, TypeG.INTEGER);
             return TypeG.BOOLEAN;
             //return TypeG.VOID;
+        }
+
+
+        public TypeG Visit(Type node)
+        {
+            if (node.AnchorToken.Lexeme == "integer")
+            {
+                return TypeG.INTEGER;
+            } else if (node.AnchorToken.Lexeme == "boolean")
+            {
+                return TypeG.BOOLEAN;
+            }
+            else if (node.AnchorToken.Lexeme == "string")
+            {
+                return TypeG.STRING;
+            }
+            return TypeG.VOID;
+
+        }
+        //-----------------------------------------------------------
+
+        public TypeG Visit(ListTypeNode node)
+        {
+            dynamic listType;
+            Console.WriteLine(node.AnchorToken.Category);
+            switch (node.AnchorToken.Lexeme)
+            {
+                case "integer":
+                    return TypeG.INTEGER_LIST;
+                case "string":
+                    return TypeG.STRING_LIST;
+                case "boolean":
+                    return TypeG.BOOLEAN_LIST;
+                default:
+                    throw new Exception($"Type {node} has no equivalent list type");
+            }
+
+            return listType;
         }
 
 

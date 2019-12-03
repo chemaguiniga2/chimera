@@ -763,7 +763,10 @@ namespace Chimera
             var sumExpr1 = MulExpression();
             while (CurrentToken == TokenCategory.ADDITION | CurrentToken == TokenCategory.SUBSTRACT)
             {
+                Console.WriteLine("ATENCION");
+
                 var sumExpr2 = SumOperator();
+                Console.WriteLine("ATENCION"+sumExpr2.AnchorToken.Lexeme);
                 sumExpr2.Add(sumExpr1);
                 sumExpr2.Add(MulExpression());
                 sumExpr1 = sumExpr2;
@@ -910,19 +913,25 @@ namespace Chimera
                 case TokenCategory.INITLIST:
                     return List();
                 case TokenCategory.IDENTIFIER:
-                    var resultIden = new Identifier() { };
+                    var resultIden = new Identifier() ;
                     // Console.WriteLine("Es aqui");
                     resultIden.AnchorToken = Expect(TokenCategory.IDENTIFIER);
 
                     if (CurrentToken == TokenCategory.INITPARENTHESIS)
                     {
-                        resultIden.Add(Call());
+                        var callNode = Call();
+                        callNode.AnchorToken = resultIden.AnchorToken;
+                        //resultIden.Add(Call());
+                        return callNode;
                     }
                     if (CurrentToken == TokenCategory.INITBRACKET)
                     {
                         Expect(TokenCategory.INITBRACKET);
-                        resultIden.Add(Expression());
+                        var expr = Expression();
+                        expr.AnchorToken = resultIden.AnchorToken;
+                        //resultIden.Add(Expression());
                         Expect(TokenCategory.CLOSINGBRACKET);
+                        return expr;
                     }
                     return resultIden;
                 // Node resultNode = null;
