@@ -69,7 +69,8 @@ namespace Chimera
                 TokenCategory.IDENTIFIER,
                 TokenCategory.INTEGERLITERAL,
                 TokenCategory.STRINGLITERAL,
-                TokenCategory.BOOLEANITERAL,
+                TokenCategory.FALSELITERAL,
+                TokenCategory.TRUELITERAL,
                 TokenCategory.INITLIST,
                 TokenCategory.INITBRACKET,
                 TokenCategory.NOT,
@@ -220,7 +221,9 @@ namespace Chimera
                     return SimpleLiteral();
                 case TokenCategory.STRINGLITERAL:
                     return SimpleLiteral();
-                case TokenCategory.BOOLEANITERAL:
+                case TokenCategory.TRUELITERAL:
+                    return SimpleLiteral();
+                case TokenCategory.FALSELITERAL:
                     return SimpleLiteral();
                 default:
                     throw new SyntaxError(firstOfSimpleExpression,
@@ -244,10 +247,15 @@ namespace Chimera
                     {
                         AnchorToken = Expect(TokenCategory.STRINGLITERAL)
                     };
-                case TokenCategory.BOOLEANITERAL:
-                    return new BooleanLiteral()
+                case TokenCategory.TRUELITERAL:
+                    return new TrueLiteral()
                     {
-                        AnchorToken = Expect(TokenCategory.BOOLEANITERAL)
+                        AnchorToken = Expect(TokenCategory.TRUELITERAL)
+                    };
+                case TokenCategory.FALSELITERAL:
+                    return new FalseLiteral()
+                    {
+                        AnchorToken = Expect(TokenCategory.FALSELITERAL)
                     };
                 default:
                     throw new SyntaxError(firstOfSimpleExpression,
@@ -424,7 +432,7 @@ namespace Chimera
             var initList = Expect(TokenCategory.INITLIST);
             var simpleLitList = new SimpleLiteralList();
             var litToken = new SimpleLiteral();
-            if (CurrentToken == TokenCategory.INTEGERLITERAL | CurrentToken == TokenCategory.STRINGLITERAL | CurrentToken == TokenCategory.BOOLEANITERAL)
+            if (CurrentToken == TokenCategory.INTEGERLITERAL | CurrentToken == TokenCategory.STRINGLITERAL | CurrentToken == TokenCategory.FALSELITERAL | CurrentToken == TokenCategory.FALSELITERAL)
             {
                 litToken.Add(SimpleLiteral());
                 while (CurrentToken == TokenCategory.COMMA)
@@ -540,7 +548,6 @@ namespace Chimera
             }
 
             return call;
-
         }
 
 
@@ -908,7 +915,9 @@ namespace Chimera
                     return SimpleLiteral();
                 case TokenCategory.STRINGLITERAL:
                     return SimpleLiteral();
-                case TokenCategory.BOOLEANITERAL:
+                case TokenCategory.TRUELITERAL:
+                    return SimpleLiteral();
+                case TokenCategory.FALSELITERAL:
                     return SimpleLiteral();
                 case TokenCategory.INITLIST:
                     return List();

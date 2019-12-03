@@ -630,6 +630,20 @@ namespace Chimera
         public TypeG Visit(CallStatement node)
         {
             //Console.WriteLine("Rock"+ node.ToStringTree());
+            Console.WriteLine("Entro CallStatement ===================================================");
+            
+            Console.WriteLine("EL lenght es: " + node.getLength());
+            if(node.getLength() == 1){
+                Console.WriteLine("Entrooooo CallStatement: Node[0]: " + node[0]);
+            }
+            if(node.getLength() == 2){
+                Console.WriteLine("Entrooooo CallStatement: Node[0]: " + node[0]);
+                Console.WriteLine("Entrooooo CallStatement: Node[1]: " + node[1]);
+            }
+            if(node.getLength() == 3){
+                 Console.WriteLine("Entrooooo CallStatement: Node[0]: " + node[0]);
+                Console.WriteLine("Entrooooo CallStatement: Node[1]: " + node[1]);
+            }
             VisitChildren(node);
             //Console.WriteLine("FIN");
             return TypeG.VOID;
@@ -901,6 +915,8 @@ namespace Chimera
         public TypeG Visit(IntegerLiteral node)
         {
 
+            Console.WriteLine("entroo IntegerLiteral ////////////////////////");
+
             var intStr = node.AnchorToken.Lexeme;
 
             try
@@ -1026,6 +1042,7 @@ namespace Chimera
 
         public TypeG Visit(LessOrEqualOperator node)
         {
+            Console.WriteLine("Entro LessOrEqualOperator ===================================================");
             Console.WriteLine("INICIO");
             VisitBinaryOperator("<=", node, TypeG.INTEGER);
             return TypeG.BOOLEAN;
@@ -1069,6 +1086,18 @@ namespace Chimera
 
             return listType;
         }
+
+        public TypeG Visit(FalseLiteral node){
+            Console.WriteLine("Entro FalseLiteral ===========================================");
+            VisitChildren(node);
+            return TypeG.VOID;
+        }
+
+        /*public TypeG Visit(IntegerLiteral node){
+            Console.WriteLine("Entro FalseLiteral ===========================================");
+            VisitChildren(node[0]);
+            return TypeG.VOID;
+        }*/
 
 
         public TypeG Visit(Exit node)

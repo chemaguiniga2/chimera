@@ -81,6 +81,8 @@ namespace Chimera {
 			{"div", TokenCategory.DIV},
 			{"rem", TokenCategory.REM},
 			{"not", TokenCategory.NOT},
+			{"true", TokenCategory.TRUELITERAL},
+            {"false", TokenCategory.FALSELITERAL},
 
 		};
 

@@ -20,6 +20,8 @@ José Rodrigo Narváez Berlanga   A01377566
      class IntegerLiteral: Node{}
      class StringLiteral: Node{}
      class BooleanLiteral: Node{}
+     class TrueLiteral: Node{}
+     class FalseLiteral: Node{}
      class AndOperator: Node{}
      class OrOperator: Node{}
      class XorOperator: Node{}
