@@ -41,6 +41,7 @@ namespace Chimera
             public static string context { get; set; }
             public static int index { get; set; }
             public static int length { get; set; }
+            public static Boolean insideLoop { get; set; }
             public static string procedure { get; set; }
             public static Boolean paramDetect { get; set; }
             public static int cantparam { get; set; } 
@@ -177,6 +178,7 @@ namespace Chimera
             fillDefineProcedure();
             //
             Console.WriteLine(node.ToStringTree());
+            CurrentContext.insideLoop = false;
             CurrentContext.context = "GLOBAL";
             CurrentContext.index = 0;
             CurrentContext.length = 0;
@@ -930,12 +932,28 @@ namespace Chimera
             return Visit((dynamic)node[0]);
         }
 
+        public TypeG Visit(RemOperator node)
+        {
+            VisitBinaryOperator("REM",node, TypeG.INTEGER);
+            return TypeG.INTEGER;
+        }
+
+
+        public TypeG Visit(DivOperator node)
+        {
+            VisitBinaryOperator("DIV", node, TypeG.INTEGER);
+            return TypeG.INTEGER;
+        }
+
         public TypeG Visit(Loop node)
         {
+            CurrentContext.insideLoop = true;
             //Console.WriteLine("INICIO");
             VisitChildren(node);
             //Console.WriteLine("FIN");
+            CurrentContext.insideLoop = false;
             return TypeG.VOID;
+
         }
 
 
@@ -1047,6 +1065,16 @@ namespace Chimera
             }
 
             return listType;
+        }
+
+
+        public TypeG Visit(Exit node)
+        {
+            if (!CurrentContext.insideLoop)
+            {
+                throw new SemanticError("Unexpected exit statement", node.AnchorToken);
+            }
+            return TypeG.VOID;
         }
 
 

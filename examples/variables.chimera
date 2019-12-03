@@ -5,23 +5,20 @@
 
 const
     konstant := 1;
-    k := 1;
 
 var
-    x, y, a, b, c, d: integer;
+    x, y: integer;
 
-procedure F( n, p : integer;
-			lst: list of integer;
-    ): integer;
+procedure F(
+        b: boolean;
+        z: integer;
+    );
 
     const
-        kons := 1;   
-        k := 1; 
+        konstant := 1000;
 
     var
         x: integer;
-        d: integer;
-        y: string;
 
     begin
         WrBool(b);
@@ -29,7 +26,7 @@ procedure F( n, p : integer;
         WrInt(z);
         WrLn();
 
-        x := x + konstant + x;
+        x := x + konstant;
         y := y + konstant;
         WrInt(x);
         WrLn();
@@ -38,21 +35,6 @@ procedure F( n, p : integer;
     end;
 
 procedure G();
-
-    var
-        y: integer;
-
-    begin
-        x := x + konstant;
-        y := y + konstant;
-        WrInt(x);
-        WrLn();
-        WrInt(y);
-        WrLn();
-        F(false, 5);
-    end;
-
-procedure H();
 
     var
         y: integer;
