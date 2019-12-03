@@ -227,8 +227,6 @@ namespace Chimera
                 {
 
                     ListLocalDeclarationTable[CurrentContext.index][variableName] = new LocalDeclarationType(variableName, TypeG.INTEGER, variableValue, -1, TypeG.CONST);
-                    //CurrentContext.length++;
-                    //ListLocalDeclarationTable[0].tableID = CurrentContext.procedure;
                 }
 
 
@@ -480,6 +478,41 @@ namespace Chimera
 
         public TypeG Visit(VariableDeclarationList node)
         {
+            /*
+            foreach (var n in node)
+            {
+                var variableName = n.AnchorToken.Lexeme;
+                var variableValue = n[0].AnchorToken.Lexeme;
+                if (CurrentContext.context == "GLOBAL")
+                {
+                    if (GloabalDeclaratonT.Contains(variableName))
+                    {
+                        throw new SemanticError(
+                        "Duplicated variable (" + CurrentContext.context + "): " + variableName,
+                        node[0].AnchorToken);
+                    }
+                    else
+                    {
+                        GloabalDeclaratonT[variableName] =
+                            new GlobalDeclarationType(variableName, TypeG.INTEGER, variableValue, TypeG.VAR);
+                    }
+                }
+                else if (CurrentContext.context == "LOCAL")
+                {
+
+                    if (ListLocalDeclarationTable[CurrentContext.index].Contains(variableName))
+                    {
+                        throw new SemanticError(
+                            "Duplicated variable: " + variableName,
+                            node[0].AnchorToken);
+                    }
+                    else
+                    {
+
+                        ListLocalDeclarationTable[CurrentContext.index][variableName] = new LocalDeclarationType(variableName, TypeG.INTEGER, variableValue, -1, TypeG.VAR);
+                    }
+                }
+            }*/
             VisitChildren(node);
             return TypeG.VOID;
         }

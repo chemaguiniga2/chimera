@@ -52,6 +52,21 @@ procedure G();
         F(false, 5);
     end;
 
+procedure H();
+
+    var
+        y: integer;
+
+    begin
+        x := x + konstant;
+        y := y + konstant;
+        WrInt(x);
+        WrLn();
+        WrInt(y);
+        WrLn();
+        F(false, 5);
+    end;
+
 program
     G();
 end;
